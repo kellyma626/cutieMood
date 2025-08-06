@@ -26,7 +26,10 @@ export default function CustomNavbar() {
         <AntDesign name="pluscircle" size={70} color={global.cutie.orange} />
       </Pressable>
 
-      <Pressable className="flex items-center -translate-x-8">
+      <Pressable
+        className="flex items-center -translate-x-8"
+        onPress={() => router.push("/ChatBot")}
+      >
         <Ionicons name="chatbubbles" size={45} color={global.cutie.orange} />
         <Text className="text-xs text-black">chat</Text>
       </Pressable>
