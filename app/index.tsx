@@ -6,7 +6,7 @@ export default function Index() {
     <View className="flex-1 justify-center items-center">
       <Text className="text-2xl font-nunito-bold">calendar</Text>
       <Link
-        href="/new_entry"
+        href="/JournalPage"
         className="text-base mt-2 text-blue-500 font-nunito"
       >
         click to add mood
