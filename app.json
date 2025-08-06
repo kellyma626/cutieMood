@@ -31,7 +31,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#FFE1E0"
         }
       ],
       [
@@ -42,6 +42,12 @@
             "./node_modules/@expo-google-fonts/nunito/Nunito_500Medium.ttf",
             "./node_modules/@expo-google-fonts/nunito/Nunito_700Bold.ttf"
           ]
+        }
+      ],
+      [
+        "expo-asset",
+        {
+          "assets": ["./assets/images/tangie.png"]
         }
       ]
     ],
