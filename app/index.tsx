@@ -1,5 +1,4 @@
-import { Text, View, Image } from "react-native";
-import { Link } from "expo-router";
+import { View, Image } from "react-native";
 import Calendar from "@/app/Calendar";
 
 export default function Index() {
