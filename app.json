@@ -33,6 +33,16 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./node_modules/@expo-google-fonts/nunito/Nunito_400Regular.ttf",
+            "./node_modules/@expo-google-fonts/nunito/Nunito_500Medium.ttf",
+            "./node_modules/@expo-google-fonts/nunito/Nunito_700Bold.ttf"
+          ]
+        }
       ]
     ],
     "experiments": {
