@@ -1,6 +1,6 @@
 import "../global.css";
 import { Stack } from "expo-router";
-import { View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import CustomNavbar from "./Navbar";
 import {
   useFonts,
@@ -17,13 +17,23 @@ export default function RootLayout() {
   });
 
   if (!fontsLoaded) {
-    return null; // or a loading spinner
+    return null;
   }
 
   return (
-    <View className="flex flex-1">
-      <Stack screenOptions={{ headerShown: false }} />
+    <LinearGradient
+      colors={["#FFC8C6", "#FFEBD6"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={{ flex: 1 }}
+    >
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "transparent" },
+        }}
+      />
       <CustomNavbar />
-    </View>
+    </LinearGradient>
   );
 }
