@@ -1,16 +1,16 @@
-import { Text, View } from "react-native";
+import { Text, View, Image } from "react-native";
 import { Link } from "expo-router";
+import Calendar from "@/app/Calendar";
 
 export default function Index() {
   return (
-    <View className="flex-1 justify-center items-center">
-      <Text className="text-2xl font-nunito-bold">calendar</Text>
-      <Link
-        href="/new_entry"
-        className="text-base mt-2 text-blue-500 font-nunito"
-      >
-        click to add mood
-      </Link>
+    <View className="flex-1 items-center ">
+      <Image
+        source={require("../assets/images/tangie.png")}
+        className="w-40 translate-y-5 h-40 z-40 mt-10"
+        resizeMode="contain"
+      />
+      <Calendar />
     </View>
   );
 }
