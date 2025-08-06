@@ -1,7 +1,8 @@
 import "../global.css";
-import { Stack } from "expo-router";
+import "../colors.global";
+import { Stack, usePathname } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import CustomNavbar from "./Navbar";
+import Navbar from "@/app/Navbar";
 import {
   useFonts,
   Nunito_400Regular,
@@ -16,13 +17,14 @@ export default function RootLayout() {
     Nunito_700Bold,
   });
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  const pathname = usePathname();
+  const hideNavbarRoutes = ["/JournalPage"]; // add more routes here if needed
+
+  if (!fontsLoaded) return null;
 
   return (
     <LinearGradient
-      colors={["#FFC8C6", "#FFEBD6"]}
+      colors={[global.cutie.gradientStart, global.cutie.gradientEnd]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={{ flex: 1 }}
@@ -33,7 +35,7 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: "transparent" },
         }}
       />
-      <CustomNavbar />
+      {!hideNavbarRoutes.includes(pathname) && <Navbar />}
     </LinearGradient>
   );
 }

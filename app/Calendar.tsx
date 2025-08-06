@@ -3,11 +3,11 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const legend = [
-  { label: "super awesome", color: "bg-red-300" },
-  { label: "pretty good", color: "bg-orange-300" },
-  { label: "okay", color: "bg-green-300" },
-  { label: "pretty bad", color: "bg-blue-300" },
-  { label: "really terrible", color: "bg-purple-300" },
+  { label: "super awesome", color: "bg-cutie-pink" },
+  { label: "pretty good", color: "bg-cutie-orange" },
+  { label: "okay", color: "bg-cutie-green" },
+  { label: "pretty bad", color: "bg-cutie-blue" },
+  { label: "really terrible", color: "bg-cutie-purple" },
 ];
 
 export default function Index() {

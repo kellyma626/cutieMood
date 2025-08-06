@@ -10,7 +10,7 @@ export default function CustomNavbar() {
         className="flex items-center ml-8"
         onPress={() => router.push("/")}
       >
-        <FontAwesome name="calendar" size={40} color="orange" />
+        <FontAwesome name="calendar" size={40} color={global.cutie.orange} />
         <Text className="text-xs text-black">calendar</Text>
       </Pressable>
 
@@ -18,11 +18,11 @@ export default function CustomNavbar() {
         className="flex items-center -translate-y-10 bg-white rounded-full"
         onPress={() => router.push("/JournalPage")}
       >
-        <AntDesign name="pluscircle" size={70} color="orange" />
+        <AntDesign name="pluscircle" size={70} color={global.cutie.orange} />
       </Pressable>
 
       <Pressable className="flex items-center mr-8">
-        <FontAwesome name="comments" size={40} color="orange" />
+        <FontAwesome name="comments" size={40} color={global.cutie.orange} />
         <Text className="text-xs text-black">chat</Text>
       </Pressable>
     </View>
