@@ -21,7 +21,10 @@ export default function CustomNavbar() {
 
       <Pressable
         className="flex items-center -translate-y-10 bg-white rounded-full"
-        onPress={() => router.push("/JournalPage")}
+        onPress={() => router.push({
+          pathname: "/EntryViewPage",
+          params: { date: "2025-08-06" },
+        })}
       >
         <AntDesign name="pluscircle" size={70} color={global.cutie.orange} />
       </Pressable>
