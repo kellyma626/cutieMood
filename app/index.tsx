@@ -15,28 +15,18 @@ export default function Index() {
   });
 
   if (!fontsLoaded) {
-    return null
+    return null;
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text style={{ fontFamily: "Nunito_700Bold", fontSize: 24 }}>
+    <View className="flex-1 justify-center items-center">
+      <Text className="text-2xl" style={{ fontFamily: "Nunito_700Bold" }}>
         calendar
       </Text>
       <Link
         href="/new_entry"
-        style={{
-          fontFamily: "Nunito_400Regular",
-          fontSize: 16,
-          marginTop: 10,
-          color: "blue",
-        }}
+        className="text-base mt-2 text-blue-500"
+        style={{ fontFamily: "Nunito_400Regular" }}
       >
         click to add mood
       </Link>
