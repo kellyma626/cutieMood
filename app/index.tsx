@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { Link } from "expo-router";
 import { Image } from 'expo-image';
-import tangieImg from '../assets/images/tangie.png'; 
+
 import {
   useFonts,
   Nunito_400Regular,
@@ -22,7 +22,6 @@ export default function Index() {
 
   return (
     <View className="flex-1 justify-center items-center">
-      <Image source={tangieImg} style={{ width: 140, height: 199 }} />
       <Text className="text-2xl" style={{ fontFamily: "Nunito_700Bold" }}>
         calendar
       </Text>

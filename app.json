@@ -44,12 +44,7 @@
           ]
         }
       ],
-      [
-        "expo-asset",
-        {
-          "assets": ["./assets/images/tangie.png"]
-        }
-      ]
+        "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
