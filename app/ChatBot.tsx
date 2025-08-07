@@ -39,7 +39,7 @@ export default function ChatBot() {
           body: JSON.stringify({
             contents: [{ parts: [{ text: userMessage }] }],
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -120,13 +120,13 @@ export default function ChatBot() {
 
           {/* Input */}
           <View className="items-center justify rounded-t-xl">
-            <View className="flex-row items-center bg-white px-4 py-3 rounded-full shadow-md w-11/12 my-4">
+            <View className="flex-row items-center bg-white px-6 pb-2  rounded-full shadow-md w-11/12 my-4">
               <TextInput
                 placeholder="type here..."
                 placeholderTextColor="gray"
                 value={input}
                 onChangeText={setInput}
-                className="flex-1 text-base"
+                className="flex-1 text-base h-12"
               />
               <TouchableOpacity onPress={sendMessage}>
                 <Entypo
