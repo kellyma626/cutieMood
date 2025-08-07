@@ -80,7 +80,7 @@ export default function ChatBot() {
           <View className="flex-row justify-center items-baseline bg-white gap-x-28">
             <Text className="text-4xl font-nunito-bold pl-7">cutieChat</Text>
             <Image
-              source={require("../assets/images/tangie.png")}
+              source={require("@/assets/images/tangie.png")}
               className="w-32 translate-y-8 h-32 z-40"
               resizeMode="contain"
             />
