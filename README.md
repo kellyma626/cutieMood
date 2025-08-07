@@ -1,5 +1,6 @@
 # cutieMood ❤︎₊ ⊹
-*by Kelly Ma and Simon Cun*
+
+_by Kelly Ma and Simon Cun_
 
 > a cute, colorful mental health app that helps you track your moods, write little reflections, and talk to a chatbot friend, all with the help of cuties 🍊✨
 
@@ -30,14 +31,14 @@ cutieMood’s UI is inspired by kawaii aesthetics, mobile journaling, and pastel
 
 ## 💻 Tech Stack
 
-| Area             | Tools Used                                    |
-|------------------|-----------------------------------------------|
-| Frontend         | React Native + Expo                           |
-| Styling          | NativeWind (Tailwind CSS for RN)              |
-| AI Integration   | Gemini API                                    |
-| Backend & Auth   | Supabase                                      |
-| Design           | Figma                                         |
-| Language         | TypeScript                                    |
+| Area           | Tools Used                       |
+| -------------- | -------------------------------- |
+| Frontend       | React Native + Expo              |
+| Styling        | NativeWind (Tailwind CSS for RN) |
+| AI Integration | Gemini API                       |
+| Backend & Auth | Supabase                         |
+| Design         | Figma                            |
+| Language       | TypeScript                       |
 
 ---
 
@@ -72,10 +73,10 @@ GEMINI_API_KEY=your_key_here
 
 ## 👩🏻‍💻👨🏻‍💻 Team Members
 
-| Name      | GitHub                                         | Contributions                  |
-|-----------|------------------------------------------------|--------------------------------|
-| Kelly Ma  | [@kellyma626](https://github.com/kellyma626)   | Mood entry UI + logic, Supabase backend integration, project design and planning  |
-| Simon Cun | [@Simon-Cun](https://github.com/Simon-Cun)     | Calendar UI + logic, chatbot UI + Gemini AI integration, framework configuration  |
+| Name      | GitHub                                       | Contributions                                                                    |
+| --------- | -------------------------------------------- | -------------------------------------------------------------------------------- |
+| Kelly Ma  | [@kellyma626](https://github.com/kellyma626) | Mood entry UI + logic, Supabase backend integration, project design and planning |
+| Simon Cun | [@Simon-Cun](https://github.com/Simon-Cun)   | Calendar UI + logic, chatbot UI + Gemini AI integration, framework configuration |
 
 ---
 
