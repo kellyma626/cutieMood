@@ -31,11 +31,11 @@ export default function JournalPage() {
   ];
 
   const moodToImage: Record<string, any> = {
-    "super awesome": require("../assets/images/orange_happy.png"),
-    "pretty good": require("../assets/images/orange_smile.png"),
-    okay: require("../assets/images/orange_neutral.png"),
-    "pretty bad": require("../assets/images/orange_sad.png"),
-    "really terrible": require("../assets/images/orange_cry.png"),
+    "super awesome": require("@/assets/images/orange_happy.png"),
+    "pretty good": require("@/assets/images/orange_smile.png"),
+    okay: require("@/assets/images/orange_neutral.png"),
+    "pretty bad": require("@/assets/images/orange_sad.png"),
+    "really terrible": require("@/assets/images/orange_cry.png"),
   };
 
   const saveEntry = async () => {
