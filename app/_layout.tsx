@@ -18,7 +18,7 @@ export default function RootLayout() {
   });
 
   const pathname = usePathname();
-  const hideNavbarRoutes = ["/JournalPage"]; // add more routes here if needed
+  const hideNavbarRoutes = ["/JournalPage", "/EntryViewPage"];
 
   if (!fontsLoaded) return null;
 
