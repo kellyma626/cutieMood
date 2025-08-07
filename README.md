@@ -23,7 +23,7 @@ cutieMood is a cheerful mobile app designed to help users check in with their fe
 
 cutieMood’s UI is inspired by kawaii aesthetics, mobile journaling, and pastel palettes.
 
-![cutieMood Screens](./Screenshot_2025-08-06_at_5.29.46_PM.png)
+<img width="1393" height="602" alt="Screenshot 2025-08-06 at 5 29 46 PM" src="https://github.com/user-attachments/assets/80ccb7bf-f928-4a33-adf4-007e3291657b" />
 
 ---
 
