@@ -1,50 +1,112 @@
-# Welcome to your Expo app 👋
+# cutieMood ❤︎₊ ⊹
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> a cute, colorful mental health app that helps you track your moods, write little reflections, and talk to a chatbot friend, all with the help of cuties 🍊✨
 
-## Get started
+---
 
-1. Install dependencies
+## 🍊💖 Project Overview
 
-   ```bash
-   npm install
-   ```
+cutieMood is a cheerful mobile app designed to help users check in with their feelings in a playful, supportive way. With mood tracking, journaling, and an AI chatbot, it’s made for people who want a fun, unserious space to reflect, especially during tough moments or daily ups and downs.
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## ✨ Key Features
 
-In the output, you'll find options to open the app in a
+- 🍊 **Mood check-ins**: pick a cute mood + write a quick journal entry
+- 📅 **Mood calendar**: visualize your mood history with color-coded days
+- 🤖 **Chatbot (cutieBot)**: powered by Gemini, it replies with empathy and care
+- 📱 **Adorable UI**: filled with derpy oranges, pastel gradients, and big cozy buttons
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🌸 Visual Design
 
-## Get a fresh project
+cutieMood’s UI is inspired by kawaii aesthetics, mobile journaling, and pastel palettes.
 
-When you're ready, run:
+![cutieMood Screens](./Screenshot_2025-08-06_at_5.29.46_PM.png)
+
+---
+
+## 💻 Tech Stack
+
+| Area             | Tools Used                                    |
+|------------------|-----------------------------------------------|
+| Frontend         | React Native + Expo                           |
+| Styling          | NativeWind (Tailwind CSS for RN)              |
+| AI Integration   | Gemini API                                    |
+| Backend & Auth   | Supabase                                      |
+| Design           | Figma                                         |
+| Language         | TypeScript                                    |
+
+---
+
+## 💾 Installation & Usage
+
+### Prerequisites
+
+- Node.js
+- npm or yarn
+- Expo CLI
+
+### Run it locally
 
 ```bash
-npm run reset-project
+git clone https://github.com/kellyma626/cutieMood.git
+cd cutieMood
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Environment Variables
 
-## Learn more
+Create a `.env` file and add:
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+SUPABASE_URL=your_url_here
+SUPABASE_ANON_KEY=your_key_here
+GEMINI_API_KEY=your_key_here
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## 👩🏻‍💻🧑🏻‍💻 Team Members
 
-Join our community of developers creating universal apps.
+| Name      | GitHub                                         | Contributions                  |
+|-----------|------------------------------------------------|--------------------------------|
+| Kelly Ma  | [@kellyma626](https://github.com/kellyma626)   | Mood entry UI + logic, Supabase backend integration, project design and planning  |
+| Simon Cun | [@Simon-Cun](https://github.com/Simon-Cun)     | Calendar UI + logic, chatbot UI + Gemini AI integration, framework configuration  |
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## ✨ Next Steps
+
+🛠️🍊 TODO: update this section later!
+
+---
+
+## 📁 Folder Structure (simplified)
+
+```
+cutieMood/
+├── assets/
+├── components/
+│   └── update this later
+├── lib/
+│   └── supabase.ts
+├── app/
+│   └── Layout.tsx
+│   └── Index.tsx
+│   └── Calendar.tsx
+│   └── JournalPage.tsx
+│   └── EntryViewPage.tsx
+└── .env
+```
+
+---
+
+## 💌 Notes
+
+cutieMood isn’t meant to replace therapy or be deeply scientific. It’s meant to be a cute way for checking in with your feelings.
+We made it because mental health tools can (and should!) feel fun, silly, and spark joy ♡
+
+---
