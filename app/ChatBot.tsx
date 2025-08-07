@@ -77,12 +77,11 @@ export default function ChatBot() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View className="flex-1 justify-between">
-          {/* Header */}
-          <View className="flex-row justify-center items-baseline bg-white">
-            <Text className="text-5xl font-bold pl-7">cutieChat</Text>
+          <View className="flex-row justify-center items-baseline bg-white gap-x-28">
+            <Text className="text-4xl font-nunito-bold pl-7">cutieChat</Text>
             <Image
               source={require("../assets/images/tangie.png")}
-              className="w-48 translate-y-12 h-48 z-40"
+              className="w-32 translate-y-8 h-32 z-40"
               resizeMode="contain"
             />
           </View>
