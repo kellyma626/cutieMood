@@ -69,7 +69,7 @@ GEMINI_API_KEY=your_key_here
 
 ---
 
-## 👩🏻‍💻🧑🏻‍💻 Team Members
+## 👩🏻‍💻👨🏻‍💻 Team Members
 
 | Name      | GitHub                                         | Contributions                  |
 |-----------|------------------------------------------------|--------------------------------|
@@ -78,7 +78,7 @@ GEMINI_API_KEY=your_key_here
 
 ---
 
-## ✨ Next Steps
+## ⭐️ Next Steps
 
 🛠️🍊 TODO: update this section later!
 
