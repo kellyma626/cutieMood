@@ -79,7 +79,7 @@ export default function Index() {
             monthTextColor: "#000",
             textMonthFontWeight: "bold",
             textMonthFontSize: 24,
-            textDayHeaderFontWeight: "600",
+            textDayHeaderFontWeight: "400",
             textDayHeaderFontSize: 14,
           }}
         />
