@@ -20,6 +20,7 @@
     "@supabase/supabase-js": "^2.53.0",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
+    "dotenv": "^17.2.1",
     "expo": "~53.0.17",
     "expo-asset": "~11.1.7",
     "expo-blur": "~14.1.5",
