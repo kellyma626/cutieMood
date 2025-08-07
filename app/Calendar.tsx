@@ -1,55 +1,91 @@
+import React from "react";
 import { Text, View } from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
-const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+import { Calendar } from "react-native-calendars";
+
+type MoodType = "pink" | "orange" | "green" | "blue" | "purple";
+
+type MarkedDatesType = {
+  [date: string]: { mood: MoodType };
+};
 
 const legend = [
-  { label: "super awesome", color: "bg-cutie-pink" },
-  { label: "pretty good", color: "bg-cutie-orange" },
-  { label: "okay", color: "bg-cutie-green" },
-  { label: "pretty bad", color: "bg-cutie-blue" },
-  { label: "really terrible", color: "bg-cutie-purple" },
+  { label: "super awesome", color: "bg-cutie-pink", value: "pink" },
+  { label: "pretty good", color: "bg-cutie-orange", value: "orange" },
+  { label: "okay", color: "bg-cutie-green", value: "green" },
+  { label: "pretty bad", color: "bg-cutie-blue", value: "blue" },
+  { label: "really terrible", color: "bg-cutie-purple", value: "purple" },
 ];
 
+const markedDates: MarkedDatesType = {
+  "2025-11-01": { mood: "orange" },
+  "2025-11-02": { mood: "pink" },
+  "2025-11-03": { mood: "green" },
+  "2025-11-04": { mood: "blue" },
+  "2025-11-05": { mood: "orange" },
+  "2025-11-06": { mood: "pink" },
+  "2025-11-07": { mood: "pink" },
+  "2025-11-08": { mood: "pink" },
+  "2025-11-09": { mood: "orange" },
+  "2025-11-10": { mood: "pink" },
+  "2025-11-11": { mood: "blue" },
+  "2025-11-12": { mood: "blue" },
+  "2025-11-13": { mood: "orange" },
+  "2025-11-14": { mood: "pink" },
+  "2025-11-15": { mood: "green" },
+  "2025-11-16": { mood: "blue" },
+  "2025-11-17": { mood: "purple" },
+};
+
 export default function Index() {
-  const totalDays = 30;
-  const firstDayIndex = 3;
-
-  const startBlanks = Array(firstDayIndex).fill(null);
-  const days = Array.from({ length: totalDays }, (_, i) => i + 1);
-  let calendarSlots = [...startBlanks, ...days];
-  const endBlanks = (7 - (calendarSlots.length % 7)) % 7;
-  calendarSlots = [...calendarSlots, ...Array(endBlanks).fill(null)];
-
   return (
-    <View className="flex-1 items-center bg-white h-full w-full rounded-t-[7vw]">
-      <View className="p-8 flex-row items-center gap-x-10">
-        <AntDesign name="left" size={30} color="gray" />
-        <Text className="font-bold text-5xl">November</Text>
-        <AntDesign name="right" size={30} color="gray" />
+    <View className="flex-1 items-center bg-white h-full w-full">
+      <View className="w-[90%] rounded-2xl overflow-hidden bg-white shadow-xl">
+        <Calendar
+          current={"2025-11-01"}
+          markingType={"custom"}
+          dayComponent={({ date, state }) => {
+            const dateString = date?.dateString;
+            const day = date?.day ?? "";
+            const isDisabled = state === "disabled";
+            const moodData = markedDates[dateString || ""];
+            const moodColor = moodData?.mood;
+
+            const baseCircle =
+              "h-10 w-10 rounded-full justify-center items-center";
+            const defaultCircle = "bg-gray-200";
+            const selectedCircle = moodColor
+              ? `bg-cutie-${moodColor}`
+              : defaultCircle;
+
+            const textColor = isDisabled
+              ? "text-gray-400"
+              : moodColor
+                ? "text-white"
+                : "text-gray-800";
+
+            return (
+              <View
+                className={`${baseCircle} ${selectedCircle} ${isDisabled ? "opacity-30" : ""}`}
+              >
+                <Text className={`font-semibold ${textColor}`}>{day}</Text>
+              </View>
+            );
+          }}
+          theme={{
+            backgroundColor: "#ffffff",
+            calendarBackground: "#ffffff",
+            textSectionTitleColor: "#333",
+            arrowColor: "gray",
+            monthTextColor: "#000",
+            textMonthFontWeight: "bold",
+            textMonthFontSize: 24,
+            textDayHeaderFontWeight: "600",
+            textDayHeaderFontSize: 14,
+          }}
+        />
       </View>
 
-      <View className="flex-row w-full px-7">
-        {daysOfWeek.map((day) => (
-          <View key={day} className="w-[14.28%] items-center justify-center">
-            <Text className="font-semibold">{day}</Text>
-          </View>
-        ))}
-      </View>
-
-      <View className="flex-row flex-wrap w-full px-7 mt-2">
-        {calendarSlots.map((day, index) => (
-          <View
-            key={index}
-            className="w-[14.28%] items-center justify-center p-1"
-          >
-            <View className="w-12 h-12 items-center justify-center bg-gray-200 rounded-full">
-              {day && <Text>{day}</Text>}
-            </View>
-          </View>
-        ))}
-      </View>
-
-      <View className="w-full px-9 mt-6">
+      <View className="w-full px-9 mt-3">
         {legend.map((item, idx) => (
           <View key={idx} className="flex-row items-center mb-2">
             <View className={`w-6 aspect-square rounded-md ${item.color}`} />
