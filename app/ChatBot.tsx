@@ -39,7 +39,7 @@ export default function ChatBot() {
           body: JSON.stringify({
             contents: [{ parts: [{ text: userMessage }] }],
           }),
-        },
+        }
       );
 
       const data = await response.json();
@@ -70,56 +70,70 @@ export default function ChatBot() {
       colors={[global.cutie.gradientStart, global.cutie.gradientEnd]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
-      style={{ flex: 1 }}
+      style={{ flex: 1 }} // ← still using style since LinearGradient doesn't accept className
     >
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View className="flex-1 justify-between">
+          {/* Header */}
           <View className="flex-row justify-center items-baseline bg-white gap-x-28">
             <Text className="text-4xl font-nunito-bold pl-7">cutieChat</Text>
             <Image
               source={require("@/assets/images/tangie.png")}
-              className="w-32 translate-y-8 h-32 z-40"
+              style={{ width: 128, height: 128 }} // ← Image doesn't support className either
+              className="translate-y-8 z-40"
               resizeMode="contain"
             />
           </View>
-
-          {/* Message bubbles */}
+          {/* Messages */}
           <ScrollView
             className="px-5"
             contentContainerStyle={{
               paddingBottom: 140,
               paddingTop: 20,
+              flexGrow: 1,
+              justifyContent: messages.length === 0 ? "center" : "flex-start",
+              alignItems: "center",
             }}
           >
-            {messages.map((msg, i) => (
-              <View
-                key={i}
-                className={`my-2 flex ${
-                  msg.sender === "user" ? "items-end" : "items-start"
-                }`}
-              >
-                {msg.sender === "bot" && (
-                  <Text className="text-xs text-black mb-1 ml-2">cutieBot</Text>
-                )}
+            {messages.length === 0 ? (
+              <View className="bg-white/90 px-5 py-4 rounded-3xl border border-cutie-pink translate-y-20 max-w-[85%]">
+                <Text className="text-center text-black font-nunito-medium text-base leading-relaxed">
+                  Tell me what’s on your mind.{"\n"}I’ll do my best to help 💬
+                </Text>
+              </View>
+            ) : (
+              messages.map((msg, i) => (
                 <View
-                  className={`px-4 py-3 max-w-[75%] shadow-md ${
-                    msg.sender === "user"
-                      ? "bg-white rounded-3xl rounded-br-sm"
-                      : "bg-white rounded-3xl rounded-bl-sm"
+                  key={i}
+                  className={`my-2 flex w-full ${
+                    msg.sender === "user" ? "items-end" : "items-start"
                   }`}
                 >
-                  <Text className="text-base text-black">{msg.content}</Text>
+                  {msg.sender === "bot" && (
+                    <Text className="text-xs text-black mb-1 ml-2">
+                      cutieBot
+                    </Text>
+                  )}
+                  <View
+                    className={`px-4 py-3 max-w-[75%] shadow-md ${
+                      msg.sender === "user"
+                        ? "bg-white rounded-3xl rounded-br-sm"
+                        : "bg-white rounded-3xl rounded-bl-sm"
+                    }`}
+                  >
+                    <Text className="text-base text-black">{msg.content}</Text>
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))
+            )}
           </ScrollView>
 
           {/* Input */}
           <View className="items-center justify rounded-t-xl">
-            <View className="flex-row items-center bg-white px-6 pb-2  rounded-full shadow-md w-11/12 my-4">
+            <View className="flex-row items-center bg-white px-6 pb-2 rounded-full shadow-md w-11/12 my-4">
               <TextInput
                 placeholder="type here..."
                 placeholderTextColor="gray"
