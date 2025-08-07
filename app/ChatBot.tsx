@@ -78,11 +78,11 @@ export default function ChatBot() {
       >
         <View className="flex-1 justify-between">
           {/* Header */}
-          <View className="flex-row justify-center items-baseline bg-white pt-10">
+          <View className="flex-row justify-center items-baseline bg-white">
             <Text className="text-5xl font-bold pl-7">cutieChat</Text>
             <Image
               source={require("../assets/images/tangie.png")}
-              className="w-52 translate-y-12 h-52 z-40"
+              className="w-48 translate-y-12 h-48 z-40"
               resizeMode="contain"
             />
           </View>
@@ -119,8 +119,8 @@ export default function ChatBot() {
           </ScrollView>
 
           {/* Input */}
-          <View className="items-center pb-44">
-            <View className="flex-row items-center bg-white px-4 py-3 rounded-full shadow-md w-11/12">
+          <View className="items-center justify rounded-t-xl">
+            <View className="flex-row items-center bg-white px-4 py-3 rounded-full shadow-md w-11/12 my-4">
               <TextInput
                 placeholder="type here..."
                 placeholderTextColor="gray"
@@ -139,6 +139,7 @@ export default function ChatBot() {
           </View>
         </View>
       </KeyboardAvoidingView>
+      <View className="h-40 w-full" />
     </LinearGradient>
   );
 }
