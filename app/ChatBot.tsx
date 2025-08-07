@@ -129,7 +129,7 @@ export default function ChatBot() {
               />
               <TouchableOpacity onPress={sendMessage}>
                 <Ionicons
-                  className="translate-y-1"
+                  className="mt-2"
                   name="send"
                   size={24}
                   color={global.cutie.orange}
