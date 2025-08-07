@@ -15,7 +15,7 @@ cutieMood is a cheerful mobile app designed to help users check in with their fe
 - 🍊 **Mood check-ins**: pick a cute mood + write a quick journal entry
 - 📅 **Mood calendar**: visualize your mood history with color-coded days
 - 🤖 **Chatbot (cutieBot)**: powered by Gemini, it replies with empathy and care
-- 📱 **Adorable UI**: filled with derpy oranges, pastel gradients, and big cozy buttons
+- 📱 **Adorable UI**: filled with derpy oranges, pastel gradients, and rounded cozy buttons
 
 ---
 
