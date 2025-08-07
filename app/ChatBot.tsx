@@ -10,7 +10,7 @@ import {
   Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Entypo } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import Constants from "expo-constants";
 
 type Message = {
@@ -128,8 +128,9 @@ export default function ChatBot() {
                 className="flex-1 text-base h-12"
               />
               <TouchableOpacity onPress={sendMessage}>
-                <Entypo
-                  name="paper-plane"
+                <Ionicons
+                  className="translate-y-1"
+                  name="send"
                   size={24}
                   color={global.cutie.orange}
                 />
