@@ -1,7 +1,7 @@
 # cutieMood ❤︎₊ ⊹
 
 > a cute, colorful mental health app that helps you track your moods, write little reflections, and talk to a chatbot friend, all with the help of cuties 🍊✨
-
+**by Kelly Ma and Simon Cun**
 ---
 
 ## 🍊💖 Project Overview
