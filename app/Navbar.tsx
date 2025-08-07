@@ -23,10 +23,17 @@ export default function CustomNavbar() {
         className="flex items-center -translate-y-10 bg-white rounded-full"
         onPress={() =>
           router.push({
+            pathname: "/JournalPage",
+            params: { date: "2025-08-06" },
+          })
+        }
+        onLongPress={() =>
+          router.push({
             pathname: "/EntryViewPage",
             params: { date: "2025-08-06" },
           })
         }
+        delayLongPress={400} // optional: shorten the hold time
       >
         <AntDesign name="pluscircle" size={70} color={global.cutie.orange} />
       </Pressable>
