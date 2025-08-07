@@ -67,7 +67,7 @@ export default function Index() {
               <View
                 className={`${baseCircle} ${selectedCircle} ${isDisabled ? "opacity-30" : ""}`}
               >
-                <Text className={`font-semibold ${textColor}`}>{day}</Text>
+                <Text className={`font-nunito-medium ${textColor}`}>{day}</Text>
               </View>
             );
           }}
@@ -78,7 +78,8 @@ export default function Index() {
             arrowColor: "gray",
             monthTextColor: "#000",
             textMonthFontWeight: "bold",
-            textMonthFontSize: 24,
+            textMonthFontSize: 32,
+            textMonthFontFamily: "Nunito_700Bold",
             textDayHeaderFontWeight: "400",
             textDayHeaderFontSize: 14,
           }}
@@ -89,7 +90,7 @@ export default function Index() {
         {legend.map((item, idx) => (
           <View key={idx} className="flex-row items-center mb-2">
             <View className={`w-6 aspect-square rounded-md ${item.color}`} />
-            <Text className="ml-2 font-semibold">{item.label}</Text>
+            <Text className="ml-2 font-nunito-bold">{item.label}</Text>
           </View>
         ))}
       </View>
