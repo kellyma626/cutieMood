@@ -12,7 +12,7 @@ export default function Index() {
     >
       <View className="flex-1 items-center">
         <Image
-          source={require("../assets/images/tangie.png")}
+          source={require("@/assets/images/tangie.png")}
           className="w-40 translate-y-5 h-40 z-40 mt-10"
           resizeMode="contain"
         />
