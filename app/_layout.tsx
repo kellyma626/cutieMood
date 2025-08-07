@@ -1,5 +1,5 @@
-import "../global.css";
-import "../colors.global";
+import "@/global.css";
+import "@/colors.global";
 import { Stack, usePathname } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import Navbar from "@/app/Navbar";
@@ -18,7 +18,7 @@ export default function RootLayout() {
   });
 
   const pathname = usePathname();
-  const hideNavbarRoutes = ["/JournalPage"]; // add more routes here if needed
+  const hideNavbarRoutes = ["/JournalPage", "/EntryViewPage"];
 
   if (!fontsLoaded) return null;
 
