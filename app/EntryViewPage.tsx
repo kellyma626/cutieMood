@@ -98,46 +98,45 @@ export default function EntryViewPage() {
       end={{ x: 0, y: 1 }}
       style={{ flex: 1 }}
     >
-  
-    <ScrollView className="flex-1 px-6 pt-24 pb-10">
-      {/* Date */}
-      <Text className="text-4xl font-nunito-bold mb-4 text-gray-700">
-        {formatDate(entry.date)}
-      </Text>
+      <ScrollView className="flex-1 px-6 pt-24 pb-10">
+        {/* Date */}
+        <Text className="text-4xl font-nunito-bold mb-4 text-gray-700">
+          {formatDate(entry.date)}
+        </Text>
 
-      {/* Mood block and Orange image overlapping */}
-      <View className="relative mb-12">
-        <View className={`w-full rounded-2xl py-6 px-6 pr-36 ${moodColor}`}>
-          <Text className="text-4xl font-nunito-bold text-white">
-            {entry.mood}
+        {/* Mood block and Orange image overlapping */}
+        <View className="relative mb-12">
+          <View className={`w-full rounded-2xl py-6 px-6 pr-36 ${moodColor}`}>
+            <Text className="text-4xl font-nunito-bold text-white">
+              {entry.mood}
+            </Text>
+          </View>
+
+          {/* Orange image floating across both blocks */}
+          <Image
+            source={moodToImage[entry.mood]}
+            className="w-28 h-28 absolute -right-1 top-5 z-10"
+            resizeMode="contain"
+          />
+        </View>
+
+        {/* Journal box */}
+        <View className="bg-gray-100 rounded-2xl p-6 -mt-5 mb-8">
+          <Text className="text-xl font-nunito text-gray-800 leading-relaxed">
+            {entry.journal_text}
           </Text>
         </View>
 
-        {/* Orange image floating across both blocks */}
-        <Image
-          source={moodToImage[entry.mood]}
-          className="w-28 h-28 absolute -right-1 top-5 z-10"
-          resizeMode="contain"
-        />
-      </View>
-
-      {/* Journal box */}
-      <View className="bg-gray-100 rounded-2xl p-6 -mt-5 mb-8">
-        <Text className="text-xl font-nunito text-gray-800 leading-relaxed">
-          {entry.journal_text}
-        </Text>
-      </View>
-
-      {/* Done button */}
-      <Pressable
-        onPress={() => router.back()}
-        className="bg-cutie-pink py-4 rounded-full items-center shadow"
-      >
-        <Text className="text-white font-semibold text-xl font-nunito-bold">
-          Done
-        </Text>
-      </Pressable>
-    </ScrollView>
+        {/* Done button */}
+        <Pressable
+          onPress={() => router.back()}
+          className="bg-cutie-pink py-4 rounded-full items-center shadow"
+        >
+          <Text className="text-white font-semibold text-xl font-nunito-bold">
+            Done
+          </Text>
+        </Pressable>
+      </ScrollView>
     </LinearGradient>
   );
 }

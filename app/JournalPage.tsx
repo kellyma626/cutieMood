@@ -14,13 +14,13 @@ import {
 import { useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { LinearGradient } from "expo-linear-gradient";
-import { supabase } from '../lib/supabase'
+import { supabase } from "../lib/supabase";
 
 export default function JournalPage() {
   const router = useRouter();
   const [mood, setMood] = useState("pretty good");
   const [journalText, setJournalText] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const moods = [
     "super awesome",
@@ -39,23 +39,25 @@ export default function JournalPage() {
   };
 
   const saveEntry = async () => {
-    const { data, error } = await supabase.from('mood_entries').insert([
-      {
-        date: selectedDate.toISOString().split('T')[0],
-        mood: mood,
-        journal_text: journalText
-      }
-    ])
-    .select()
-  
+    const { data, error } = await supabase
+      .from("mood_entries")
+      .insert([
+        {
+          date: selectedDate.toISOString().split("T")[0],
+          mood: mood,
+          journal_text: journalText,
+        },
+      ])
+      .select();
+
     if (error) {
-      console.error('Save failed:', error)
-      alert('Oops! Something went wrong.')
+      console.error("Save failed:", error);
+      alert("Oops! Something went wrong.");
     } else {
-      console.log('Saved entry!', data)
-      alert('Mood saved! 🍊')
+      console.log("Saved entry!", data);
+      alert("Mood saved! 🍊");
     }
-  }
+  };
 
   return (
     <LinearGradient
@@ -150,7 +152,10 @@ export default function JournalPage() {
                     minHeight: 200,
                   }}
                 />
-                <Pressable onPress={saveEntry} className="bg-cutie-orange py-3 rounded-full items-center shadow mx-6 translate-y-10">
+                <Pressable
+                  onPress={saveEntry}
+                  className="bg-cutie-orange py-3 rounded-full items-center shadow mx-6 translate-y-10"
+                >
                   <Text className="text-white font-semibold text-lg font-nunito-bold">
                     Save
                   </Text>
