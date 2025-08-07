@@ -1,5 +1,5 @@
-import "../global.css";
-import "../colors.global";
+import "@/global.css";
+import "@/colors.global";
 import { Stack, usePathname } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import Navbar from "@/app/Navbar";

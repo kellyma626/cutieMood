@@ -1,16 +1,17 @@
 import { View, Text, Image, Pressable, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { supabase } from "../lib/supabase";
 import { LinearGradient } from "expo-linear-gradient";
+
+import { supabase } from "@/lib/supabase";
 
 // Mood image mapping
 const moodToImage: Record<string, any> = {
-  "super awesome": require("../assets/images/orange_happy.png"),
-  "pretty good": require("../assets/images/orange_smile.png"),
-  okay: require("../assets/images/orange_neutral.png"),
-  "pretty bad": require("../assets/images/orange_sad.png"),
-  "really terrible": require("../assets/images/orange_cry.png"),
+  "super awesome": require("@/assets/images/orange_happy.png"),
+  "pretty good": require("@/assets/images/orange_smile.png"),
+  okay: require("@/assets/images/orange_neutral.png"),
+  "pretty bad": require("@/assets/images/orange_sad.png"),
+  "really terrible": require("@/assets/images/orange_cry.png"),
 };
 
 // Mood color mapping
