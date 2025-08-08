@@ -124,7 +124,7 @@ export default function JournalPage() {
 
                     <View className="mt-36">
                       <Text className="text-5xl pt-5 font-nunito-bold mb-1">
-                        Hi, Kelly.
+                        Hello
                       </Text>
                       <Text className="text-xl text-gray-500 font-nunito">
                         How are you feeling today?
