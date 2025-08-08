@@ -196,7 +196,7 @@ export default function JournalPage() {
                       value={journalText}
                       onChangeText={setJournalText}
                       onFocus={() => setIsFocused(true)}
-                      className="text-gray-800 p-3 rounded-xl text-base font-normal min-h-[180px] max-h-[300px] text-top italic"
+                      className="text-gray-800 p-3 rounded-xl text-base font-normal min-h-[180px] max-h-[300px] text-top"
                     />
 
                     <Pressable
