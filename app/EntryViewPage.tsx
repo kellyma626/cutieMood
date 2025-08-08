@@ -2,7 +2,6 @@ import { View, Text, Image, Pressable, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-
 import { supabase } from "@/lib/supabase.js";
 
 // Mood image mapping
@@ -49,8 +48,9 @@ export default function EntryViewPage() {
 
       const { data, error } = await supabase
         .from("mood_entries")
-        .select()
+        .select("*")
         .eq("date", date)
+        .order("id", { ascending: false }) // ⬅️ NEW: most recent entry
         .limit(1)
         .maybeSingle();
 
@@ -114,7 +114,6 @@ export default function EntryViewPage() {
             </Text>
           </View>
 
-          {/* Orange image floating across both blocks */}
           <Image
             source={moodToImage[entry.mood]}
             className="w-28 h-28 absolute -right-1 top-5 z-10"

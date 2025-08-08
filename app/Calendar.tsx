@@ -45,10 +45,26 @@ export default function Index() {
     fetchMoods();
   }, []);
 
-  function onDayPress(dateString: string) {
+  async function onDayPress(dateString: string) {
+    const { data, error } = await supabase
+      .from("mood_entries")
+      .select("id")
+      .eq("date", dateString)
+      .order("id", { ascending: true }) // 👈 Higher ID = more recent
+      .limit(1)
+      .maybeSingle();
+
+    if (error || !data) {
+      console.warn("No mood entry found for", dateString, "Error:", error);
+      return;
+    }
+
     router.push({
       pathname: "/EntryViewPage",
-      params: { date: dateString },
+      params: {
+        date: dateString,
+        id: data.id.toString(), // pass as string if needed for URL
+      },
     });
   }
 
