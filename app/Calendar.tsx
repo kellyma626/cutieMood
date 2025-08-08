@@ -1,6 +1,7 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-calendars";
+import { router } from "expo-router";
 
 type MoodType = "pink" | "orange" | "green" | "blue" | "purple";
 
@@ -37,6 +38,13 @@ const markedDates: MarkedDatesType = {
 };
 
 export default function Index() {
+  function onDayPress(dateString: string) {
+    router.push({
+      pathname: "/EntryViewPage",
+      params: { date: dateString },
+    });
+  }
+
   return (
     <View className="flex-1 items-center bg-white h-full w-full">
       <View className="w-[90%] rounded-2xl overflow-hidden bg-white shadow-xl">
@@ -45,6 +53,7 @@ export default function Index() {
           markingType={"custom"}
           dayComponent={({ date, state }) => {
             const dateString = date?.dateString;
+            if (!dateString) return null;
             const day = date?.day ?? "";
             const isDisabled = state === "disabled";
             const moodData = markedDates[dateString || ""];
@@ -64,11 +73,16 @@ export default function Index() {
                 : "text-gray-800";
 
             return (
+              <TouchableOpacity
+                disabled={isDisabled}
+                onPress={() => onDayPress(dateString)}
+              >
               <View
                 className={`${baseCircle} ${selectedCircle} ${isDisabled ? "opacity-30" : ""}`}
               >
                 <Text className={`font-nunito-medium ${textColor}`}>{day}</Text>
               </View>
+              </TouchableOpacity>
             );
           }}
           theme={{
