@@ -83,7 +83,7 @@ export default function ChatBot() {
             <Image
               source={require("@/assets/images/tangie.png")}
               style={{ width: 128, height: 128 }} // ← Image doesn't support className either
-              className="translate-y-8 z-40"
+              className="translate-y-12 z-40"
               resizeMode="contain"
             />
           </View>
