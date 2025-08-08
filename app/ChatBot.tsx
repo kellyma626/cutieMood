@@ -20,7 +20,14 @@ type Message = {
 
 export default function ChatBot() {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      sender: "bot",
+      content: "Tell me what’s on your mind.\nI’ll do my best to help 💬",
+    },
+  ]);
+
+  const [isTyping, setIsTyping] = useState(false); // 👈 added loading state
   const GEMINI_API_KEY = Constants.expoConfig?.extra?.GEMINI_API_KEY;
 
   const sendMessage = async () => {
@@ -29,6 +36,7 @@ export default function ChatBot() {
     const userMessage = input;
     setMessages((prev) => [...prev, { sender: "user", content: userMessage }]);
     setInput("");
+    setIsTyping(true); // 👈 Start typing
 
     try {
       const response = await fetch(
@@ -62,6 +70,8 @@ export default function ChatBot() {
         ...prev,
         { sender: "bot", content: "Oops! Something broke :(" },
       ]);
+    } finally {
+      setIsTyping(false); // 👈 Done typing
     }
   };
 
@@ -70,7 +80,7 @@ export default function ChatBot() {
       colors={[global.cutie.gradientStart, global.cutie.gradientEnd]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
-      style={{ flex: 1 }} // ← still using style since LinearGradient doesn't accept className
+      style={{ flex: 1 }}
     >
       <KeyboardAvoidingView
         className="flex-1"
@@ -82,11 +92,12 @@ export default function ChatBot() {
             <Text className="text-4xl font-nunito-bold pl-7">cutieChat</Text>
             <Image
               source={require("@/assets/images/tangie.png")}
-              style={{ width: 128, height: 128 }} // ← Image doesn't support className either
+              style={{ width: 128, height: 128 }}
               className="translate-y-12 z-40"
               resizeMode="contain"
             />
           </View>
+
           {/* Messages */}
           <ScrollView
             className="px-5"
@@ -98,36 +109,36 @@ export default function ChatBot() {
               alignItems: "center",
             }}
           >
-            {messages.length === 0 ? (
-              <View className="bg-white/90 px-5 py-4 rounded-3xl border border-cutie-pink translate-y-20 max-w-[85%]">
-                <Text className="text-center text-black font-nunito-medium text-base leading-relaxed">
-                  Tell me what’s on your mind.{"\n"}I’ll do my best to help 💬
-                </Text>
-              </View>
-            ) : (
-              messages.map((msg, i) => (
+            {messages.map((msg, i) => (
+              <View
+                key={i}
+                className={`my-2 flex w-full ${
+                  msg.sender === "user" ? "items-end" : "items-start"
+                }`}
+              >
+                {msg.sender === "bot" && (
+                  <Text className="text-xs text-black mb-1 ml-2">cutieBot</Text>
+                )}
                 <View
-                  key={i}
-                  className={`my-2 flex w-full ${
-                    msg.sender === "user" ? "items-end" : "items-start"
+                  className={`px-4 py-3 max-w-[75%] shadow-md ${
+                    msg.sender === "user"
+                      ? "bg-white rounded-3xl rounded-br-sm"
+                      : "bg-white rounded-3xl rounded-bl-sm"
                   }`}
                 >
-                  {msg.sender === "bot" && (
-                    <Text className="text-xs text-black mb-1 ml-2">
-                      cutieBot
-                    </Text>
-                  )}
-                  <View
-                    className={`px-4 py-3 max-w-[75%] shadow-md ${
-                      msg.sender === "user"
-                        ? "bg-white rounded-3xl rounded-br-sm"
-                        : "bg-white rounded-3xl rounded-bl-sm"
-                    }`}
-                  >
-                    <Text className="text-base text-black">{msg.content}</Text>
-                  </View>
+                  <Text className="text-base text-black">{msg.content}</Text>
                 </View>
-              ))
+              </View>
+            ))}
+
+            {/* Typing bubble */}
+            {isTyping && (
+              <View className="w-full items-start">
+                <Text className="text-xs text-black mb-1 ml-2">cutieBot</Text>
+                <View className="bg-white px-4 py-3 rounded-3xl rounded-bl-sm shadow-md max-w-[75%]">
+                  <Text className="text-base text-black italic">typing...</Text>
+                </View>
+              </View>
             )}
           </ScrollView>
 
