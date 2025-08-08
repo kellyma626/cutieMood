@@ -1,4 +1,5 @@
 import {
+  ScrollView,
   View,
   Text,
   Image,
@@ -19,6 +20,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { supabase } from "@/lib/supabase.js";
+// near the top of the file, after constants
+const JOURNAL_MAX_HEIGHT = 280; // tweak to taste
 
 // Mood image mapping
 const moodToImage: Record<string, any> = {
@@ -413,21 +416,31 @@ export default function EntryViewPage() {
                       <Text className="text-gray-500 font-nunito mb-2">
                         Editing — tap to edit
                       </Text>
+
                       <TextInput
                         multiline
+                        scrollEnabled
                         value={editedText}
                         onChangeText={setEditedText}
-                        onFocus={() => setFullEditorOpen(true)} // open full-screen ONLY when textbox focused
+                        onFocus={() => setFullEditorOpen(true)}
                         placeholder="Type your thoughts here…"
                         placeholderTextColor="#9CA3AF"
-                        className="text-xl font-nunito text-gray-800 leading-relaxed min-h-[120px] max-h-[220px] text-top"
+                        textAlignVertical="top"
+                        style={{ maxHeight: JOURNAL_MAX_HEIGHT }}
+                        className="text-xl font-nunito text-gray-800 leading-relaxed min-h-[120px]"
                       />
                     </View>
                   ) : (
-                    // Read-only text (no full-screen on tap)
-                    <Text className="text-xl font-nunito text-gray-800 leading-relaxed">
-                      {item.journal_text}
-                    </Text>
+                    <ScrollView
+                      style={{ maxHeight: JOURNAL_MAX_HEIGHT }}
+                      nestedScrollEnabled
+                      showsVerticalScrollIndicator
+                      keyboardShouldPersistTaps="handled"
+                    >
+                      <Text className="text-xl font-nunito text-gray-800 leading-relaxed">
+                        {item.journal_text}
+                      </Text>
+                    </ScrollView>
                   )}
                 </View>
 
