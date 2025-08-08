@@ -410,7 +410,7 @@ export default function EntryViewPage() {
                 </Pressable>
 
                 {/* Journal box */}
-                <View className="bg-gray-100 rounded-2xl p-6 -mt-5 mb-8">
+                <View className="bg-gray-100 rounded-2xl p-6 -mt-5 mb-4">
                   {isEditing && isCurrent ? (
                     <View>
                       <Text className="text-gray-500 font-nunito mb-2">
@@ -445,7 +445,7 @@ export default function EntryViewPage() {
                 </View>
 
                 {/* ACTIONS */}
-                <View className="space-y-4 gap-y-8">
+                <View className="space-y-4 gap-y-4">
                   {!isEditing ? (
                     <>
                       <Pressable
