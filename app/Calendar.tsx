@@ -11,7 +11,6 @@ const legend = [
   { label: "okay", color: "bg-cutie-green" },
   { label: "pretty bad", color: "bg-cutie-blue" },
   { label: "really terrible", color: "bg-cutie-purple" },
-  { label: "really awesome", color: "bg-cutie-pink" }, // added!
 ];
 
 // Map mood strings to tailwind bg classes
@@ -21,7 +20,6 @@ const moodToColor: Record<string, string> = {
   okay: "bg-cutie-green",
   "pretty bad": "bg-cutie-blue",
   "really terrible": "bg-cutie-purple",
-  "really awesome": "bg-cutie-pink", // include this one too!
 };
 
 export default function Index() {
