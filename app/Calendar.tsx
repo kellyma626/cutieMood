@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native"; // 👈 for auto-refetch on return
 import { supabase } from "@/lib/supabase";
 
 // Mood legend (for display only)
@@ -25,24 +26,69 @@ const moodToColor: Record<string, string> = {
 export default function Index() {
   const [moodMap, setMoodMap] = useState<Record<string, string>>({});
 
+  const fetchMoods = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("mood_entries")
+      .select("date, mood, id");
+    if (error) {
+      console.error("Error fetching mood entries:", error);
+      return;
+    }
+
+    // keep newest per date (assumes higher id = newer)
+    const latestByDate: Record<string, { mood: string; id: number }> = {};
+    for (const row of data ?? []) {
+      const prev = latestByDate[row.date];
+      if (!prev || row.id > prev.id)
+        latestByDate[row.date] = { mood: row.mood, id: row.id };
+    }
+
+    const map: Record<string, string> = {};
+    Object.keys(latestByDate).forEach((d) => (map[d] = latestByDate[d].mood));
+    setMoodMap(map);
+  }, []);
+
+  // Initial load
   useEffect(() => {
-    const fetchMoods = async () => {
-      const { data, error } = await supabase
-        .from("mood_entries")
-        .select("date, mood");
-      if (error) {
-        console.error("Error fetching mood entries:", error);
-        return;
-      }
-
-      const map: Record<string, string> = {};
-      data.forEach((entry: any) => {
-        map[entry.date] = entry.mood;
-      });
-      setMoodMap(map);
-    };
-
     fetchMoods();
+  }, [fetchMoods]);
+
+  // Auto-refresh when navigating back to this screen
+  useFocusEffect(
+    useCallback(() => {
+      fetchMoods();
+    }, [fetchMoods]),
+  );
+
+  // Realtime updates (instant color change on insert/update/delete)
+  useEffect(() => {
+    const channel = supabase
+      .channel("mood_entries:realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "mood_entries" },
+        (payload) => {
+          if (
+            payload.eventType === "INSERT" ||
+            payload.eventType === "UPDATE"
+          ) {
+            const row: any = payload.new;
+            setMoodMap((prev) => ({ ...prev, [row.date]: row.mood }));
+          } else if (payload.eventType === "DELETE") {
+            const row: any = payload.old;
+            setMoodMap((prev) => {
+              const copy = { ...prev };
+              delete copy[row.date];
+              return copy;
+            });
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   async function onDayPress(dateString: string) {
@@ -50,7 +96,7 @@ export default function Index() {
       .from("mood_entries")
       .select("id")
       .eq("date", dateString)
-      .order("id", { ascending: true }) // 👈 Higher ID = more recent
+      .order("id", { ascending: false }) // ✅ newest first (fixed)
       .limit(1)
       .maybeSingle();
 
@@ -61,10 +107,7 @@ export default function Index() {
 
     router.push({
       pathname: "/EntryViewPage",
-      params: {
-        date: dateString,
-        id: data.id.toString(), // pass as string if needed for URL
-      },
+      params: { date: dateString, id: String(data.id) },
     });
   }
 
@@ -77,10 +120,10 @@ export default function Index() {
           enableSwipeMonths={true}
           dayComponent={({ date, state }) => {
             const day = date?.day ?? "";
-            const dateString = date?.dateString;
+            const dateString = date?.dateString!;
             const isDisabled = state === "disabled";
 
-            const mood = dateString && moodMap[dateString];
+            const mood = moodMap[dateString];
             const moodBg = mood
               ? moodToColor[mood] || "bg-gray-200"
               : "bg-gray-200";
@@ -89,21 +132,16 @@ export default function Index() {
               : mood
                 ? "text-white"
                 : "text-gray-800";
-
             const baseCircle =
               "h-10 w-10 rounded-full justify-center items-center";
 
             return (
               <TouchableOpacity
                 disabled={isDisabled}
-                onPress={() => {
-                  if (dateString) onDayPress(dateString);
-                }}
+                onPress={() => onDayPress(dateString)}
               >
                 <View
-                  className={`${baseCircle} ${moodBg} ${
-                    isDisabled ? "opacity-30" : ""
-                  }`}
+                  className={`${baseCircle} ${moodBg} ${isDisabled ? "opacity-30" : ""}`}
                 >
                   <Text className={`font-nunito-medium ${textColor}`}>
                     {day}

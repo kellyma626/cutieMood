@@ -11,6 +11,8 @@ import {
   NativeScrollEvent,
   LayoutChangeEvent,
   PanResponder,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import type { ViewToken, ViewabilityConfig } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -35,6 +37,16 @@ const moodToColor: Record<string, string> = {
   "pretty bad": "bg-cutie-blue",
   "really terrible": "bg-cutie-purple",
 };
+
+const ALL_MOODS = [
+  "super awesome",
+  "pretty good",
+  "okay",
+  "pretty bad",
+  "really terrible",
+] as const;
+
+type MoodType = (typeof ALL_MOODS)[number];
 
 function formatDate(dateString: string) {
   const date = new Date(dateString);
@@ -65,6 +77,12 @@ export default function EntryViewPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState("");
 
+  // Mood picker modal
+  const [moodPickerOpen, setMoodPickerOpen] = useState(false);
+
+  // Full-screen text editor
+  const [fullEditorOpen, setFullEditorOpen] = useState(false);
+
   // Modal for history list
   const [historyOpen, setHistoryOpen] = useState(false);
 
@@ -77,6 +95,16 @@ export default function EntryViewPage() {
   useEffect(() => {
     currentIndexRef.current = currentIndex;
   }, [currentIndex]);
+
+  // Close mood picker if we leave edit mode
+  useEffect(() => {
+    if (!isEditing && moodPickerOpen) setMoodPickerOpen(false);
+  }, [isEditing, moodPickerOpen]);
+
+  // Also close full-screen editor if we leave edit mode
+  useEffect(() => {
+    if (!isEditing && fullEditorOpen) setFullEditorOpen(false);
+  }, [isEditing, fullEditorOpen]);
 
   // Swipe-down close for history sheet
   const panHistory = useRef(
@@ -140,6 +168,30 @@ export default function EntryViewPage() {
       });
       setIsEditing(false);
       Alert.alert("Entry saved!");
+    }
+  };
+
+  const handleUpdateMood = async (newMood: MoodType) => {
+    if (!entry) return;
+    const { error } = await supabase
+      .from("mood_entries")
+      .update({ mood: newMood })
+      .eq("id", entry.id);
+
+    if (error) {
+      console.error("Mood update failed:", error);
+      Alert.alert("Failed to update mood.");
+    } else {
+      setEntries((prev) => {
+        if (!prev) return prev;
+        const copy = [...prev];
+        copy[currentIndex] = {
+          ...copy[currentIndex],
+          mood: newMood,
+        };
+        return copy;
+      });
+      setMoodPickerOpen(false);
     }
   };
 
@@ -211,11 +263,18 @@ export default function EntryViewPage() {
     >
       {/* Header */}
       <View className="px-6 pt-24">
-        <View className="flex-row items-center justify-between mb-2">
-          <Text className="text-4xl font-nunito-bold text-gray-700">
+        <View className="items-center justify-between mb-4">
+          <Text className="text-5xl pt-2 font-nunito-bold text-gray-700">
             {formatDate(entries[0].date)}
           </Text>
+        </View>
 
+        <View className="flex-row justify-between">
+          {entries.length > 1 && (
+            <Text className="text-gray-600 mb-3 font-nunito text-xl">
+              Entries {currentIndex + 1} of {entries.length}
+            </Text>
+          )}
           {moreCount > 0 && (
             <Pressable
               onPress={() => setHistoryOpen(true)}
@@ -225,12 +284,6 @@ export default function EntryViewPage() {
             </Pressable>
           )}
         </View>
-
-        {entries.length > 1 && (
-          <Text className="text-gray-600 mb-3 font-nunito">
-            Entries {currentIndex + 1} of {entries.length}
-          </Text>
-        )}
       </View>
 
       {/* Horizontal pager */}
@@ -245,7 +298,6 @@ export default function EntryViewPage() {
           onMomentumScrollEnd={onMomentumEnd}
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfigRef.current}
-          // Pre-render neighbors so buttons are ready
           removeClippedSubviews={false}
           initialNumToRender={3}
           maxToRenderPerBatch={5}
@@ -268,41 +320,66 @@ export default function EntryViewPage() {
             return (
               <View
                 style={{ width: pageWidth ?? "100%" }}
-                className="px-6 pb-10"
+                className="px-6 pb-10 relative"
               >
-                {/* Mood block + emoji */}
-                <View className="relative mb-12 mt-2">
+                {/* Tangerine image pinned to the very top-right of the card */}
+                <Image
+                  source={moodToImage[item.mood]}
+                  className="w-28 h-28 absolute right-4 top-16 z-20"
+                  resizeMode="contain"
+                />
+
+                {/* Mood block (tap only in edit mode) */}
+                <Pressable
+                  disabled={!isCurrent || !isEditing}
+                  onPress={() => setMoodPickerOpen(true)}
+                  className="relative mb-12 mt-14"
+                >
                   <View
                     className={`w-full rounded-2xl py-6 px-6 pr-36 ${moodColor}`}
                   >
-                    <Text className="text-4xl font-nunito-bold text-white">
+                    <Text className="text-3xl font-nunito-bold text-white">
                       {item.mood}
                     </Text>
+                    {isCurrent && isEditing && (
+                      <Text className="text-white/90 font-nunito mt-1">
+                        Tap to change mood
+                      </Text>
+                    )}
                   </View>
-                  <Image
-                    source={moodToImage[item.mood]}
-                    className="w-28 h-28 absolute -right-1 top-5 z-10"
-                    resizeMode="contain"
-                  />
-                </View>
+
+                  {/* Subtle overlay when not current */}
+                  {!isCurrent && (
+                    <View className="absolute inset-0 rounded-2xl bg-black/5" />
+                  )}
+                </Pressable>
 
                 {/* Journal box */}
                 <View className="bg-gray-100 rounded-2xl p-6 -mt-5 mb-8">
                   {isEditing && isCurrent ? (
-                    <TextInput
-                      multiline
-                      value={editedText}
-                      onChangeText={setEditedText}
-                      className="text-xl font-nunito text-gray-800 leading-relaxed min-h-[180px] max-h-[300px] text-top"
-                    />
+                    <View>
+                      <Text className="text-gray-500 font-nunito mb-2">
+                        Editing — tap to edit
+                      </Text>
+                      <TextInput
+                        multiline
+                        value={editedText}
+                        onChangeText={setEditedText}
+                        onFocus={() => setFullEditorOpen(true)} // open full-screen ONLY when textbox focused
+                        placeholder="Type your thoughts here…"
+                        placeholderTextColor="#9CA3AF"
+                        className="text-xl font-nunito text-gray-800 leading-relaxed min-h-[120px] max-h-[220px] text-top"
+                      />
+                    </View>
                   ) : (
+                    // Read-only text (no full-screen on tap)
                     <Text className="text-xl font-nunito text-gray-800 leading-relaxed">
                       {item.journal_text}
                     </Text>
                   )}
                 </View>
 
-                {/* ACTIONS: always mounted; dim when not current (no color swap) */}
+                {/* ACTIONS */}
                 <View className="space-y-4 gap-y-8">
                   {!isEditing ? (
                     <>
@@ -310,7 +387,7 @@ export default function EntryViewPage() {
                         disabled={!isCurrent}
                         onPress={() => {
                           setEditedText(item.journal_text ?? "");
-                          setIsEditing(true);
+                          setIsEditing(true); // DO NOT open full-screen here
                         }}
                         className={`bg-cutie-green py-4 rounded-full items-center shadow ${
                           isCurrent ? "" : "opacity-40"
@@ -349,7 +426,10 @@ export default function EntryViewPage() {
 
                       <Pressable
                         disabled={!isCurrent}
-                        onPress={() => setIsEditing(false)}
+                        onPress={() => {
+                          setIsEditing(false);
+                          setFullEditorOpen(false); // safety close
+                        }}
                         className={`bg-cutie-pink py-4 rounded-full items-center shadow ${
                           isCurrent ? "" : "opacity-40"
                         }`}
@@ -366,6 +446,126 @@ export default function EntryViewPage() {
           }}
         />
       </View>
+
+      {/* Mood picker modal */}
+      <Modal
+        visible={moodPickerOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setMoodPickerOpen(false)}
+      >
+        <View className="flex-1 items-center justify-center">
+          {/* Backdrop */}
+          <Pressable
+            onPress={() => setMoodPickerOpen(false)}
+            className="absolute inset-0 bg-black/40"
+          />
+
+          {/* Card */}
+          <View className="bg-white w-[88%] rounded-3xl p-6">
+            <Text className="text-2xl font-nunito-bold text-gray-800 mb-4">
+              Select your mood
+            </Text>
+
+            <View className="gap-y-3">
+              {ALL_MOODS.map((m) => (
+                <Pressable
+                  key={m}
+                  onPress={() => handleUpdateMood(m)}
+                  className="flex-row items-center justify-between px-4 py-3 rounded-2xl bg-gray-50"
+                >
+                  <View className="flex-row items-center gap-x-3">
+                    <Image
+                      source={moodToImage[m]}
+                      className="w-9 h-9"
+                      resizeMode="contain"
+                    />
+                    <Text className="text-lg font-nunito text-gray-800">
+                      {m}
+                    </Text>
+                  </View>
+
+                  {/* Selected check */}
+                  {entry?.mood === m ? (
+                    <View className="w-6 h-6 rounded-full bg-cutie-green" />
+                  ) : (
+                    <View className="w-6 h-6 rounded-full border border-gray-300" />
+                  )}
+                </Pressable>
+              ))}
+            </View>
+
+            <Pressable
+              onPress={() => setMoodPickerOpen(false)}
+              className="mt-5 bg-gray-200 py-3 rounded-2xl items-center"
+            >
+              <Text className="font-nunito-bold text-gray-700 text-lg">
+                Close
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      {/* FULL-SCREEN TEXT EDITOR */}
+      <Modal
+        visible={fullEditorOpen}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setFullEditorOpen(false)}
+      >
+        <View className="flex-1 bg-white">
+          {/* Top bar */}
+          <View className="flex-row items-center justify-between px-5 pt-14 pb-3 border-b border-gray-200">
+            <Pressable
+              onPress={() => {
+                setFullEditorOpen(false);
+                // Keep isEditing true; user can still save/cancel via main buttons.
+              }}
+              className="px-3 py-2"
+            >
+              <Text className="font-nunito-bold text-gray-700 text-lg">
+                Close
+              </Text>
+            </Pressable>
+
+            <Text className="font-nunito-bold text-gray-800 text-lg">
+              Edit Entry
+            </Text>
+
+            <Pressable
+              onPress={async () => {
+                await handleSave();
+                setFullEditorOpen(false);
+              }}
+              className="px-3 py-2"
+            >
+              <Text className="font-nunito-bold text-cutie-green text-lg">
+                Save
+              </Text>
+            </Pressable>
+          </View>
+
+          {/* Editor body */}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            className="flex-1"
+          >
+            <View className="flex-1 p-5">
+              <TextInput
+                autoFocus
+                multiline
+                value={editedText}
+                onChangeText={setEditedText}
+                textAlignVertical="top"
+                placeholder="Write your thoughts…"
+                placeholderTextColor="#9CA3AF"
+                className="flex-1 text-[18px] font-nunito text-gray-800 leading-relaxed"
+              />
+            </View>
+          </KeyboardAvoidingView>
+        </View>
+      </Modal>
 
       {/* History picker modal */}
       <Modal
