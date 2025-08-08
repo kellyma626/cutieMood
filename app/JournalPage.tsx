@@ -14,7 +14,7 @@ import {
 import { useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { LinearGradient } from "expo-linear-gradient";
-import { supabase } from "../lib/supabase";
+import { supabase } from "@/lib/supabase.js";
 
 export default function JournalPage() {
   const router = useRouter();

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase.js";
 
 // Mood image mapping
 const moodToImage: Record<string, any> = {

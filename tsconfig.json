@@ -9,6 +9,7 @@
   },
   "include": [
     "**/*.ts",
+    "**/*.js",
     "**/*.tsx",
     "nativewind-env.d.ts",
     "app/JournalPage.tsx",
