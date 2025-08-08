@@ -74,6 +74,7 @@ export default function Index() {
         <Calendar
           current={new Date().toISOString().split("T")[0]}
           markingType={"custom"}
+          enableSwipeMonths={true}
           dayComponent={({ date, state }) => {
             const day = date?.day ?? "";
             const dateString = date?.dateString;
