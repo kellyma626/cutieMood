@@ -26,6 +26,7 @@ const moodToColor: Record<string, string> = {
 // Helper function to reformat date
 function formatDate(dateString: string) {
   const date = new Date(dateString);
+  date.setDate(date.getDate() + 1);
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
