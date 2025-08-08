@@ -21,6 +21,12 @@ cutieMood is a cheerful mobile app designed to help users check in with their fe
 
 ---
 
+## 🧡 Demo Video
+
+🛠️🍊 TODO: add demo video 
+
+---
+
 ## 🌸 Visual Design
 
 cutieMood’s UI is inspired by kawaii aesthetics, mobile journaling, and pastel palettes.
@@ -64,9 +70,18 @@ npx expo start
 Create a `.env` file and add:
 
 ```
-SUPABASE_URL=your_url_here
-SUPABASE_ANON_KEY=your_key_here
-GEMINI_API_KEY=your_key_here
+GEMINI_API_KEY = your_key_here
+```
+
+Create a `lib` folder with a `supabase.js` file and add:
+
+```
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = your_url_here
+const supabaseAnonKey = your_key_here
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 ```
 
 ---
@@ -82,7 +97,8 @@ GEMINI_API_KEY=your_key_here
 
 ## 🌱 Next Steps
 
-🛠️🍊 TODO: update this section later!
+- Add user authentication
+- Add image property to journal entry
 
 ---
 
@@ -91,16 +107,16 @@ GEMINI_API_KEY=your_key_here
 ```
 cutieMood/
 ├── assets/
-├── components/
-│   └── update this later
 ├── lib/
-│   └── supabase.ts
+│   └── supabase.js
 ├── app/
-│   └── Layout.tsx
-│   └── Index.tsx
+│   └── _layout.tsx
+│   └── index.tsx
 │   └── Calendar.tsx
 │   └── JournalPage.tsx
 │   └── EntryViewPage.tsx
+│   └── ChatBot.tsx
+│   └── Navbar.tsx
 └── .env
 ```
 
