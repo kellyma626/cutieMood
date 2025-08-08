@@ -1,4 +1,12 @@
-import { View, Text, Image, Pressable, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  ScrollView,
+  TextInput,
+  Alert,
+} from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -36,7 +44,9 @@ function formatDate(dateString: string) {
 export default function EntryViewPage() {
   const router = useRouter();
   const { date } = useLocalSearchParams();
-  const [entry, setEntry] = useState<any>(undefined); // undefined = loading, null = no data
+  const [entry, setEntry] = useState<any>(undefined);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState("");
 
   useEffect(() => {
     const fetchEntry = async () => {
@@ -50,7 +60,7 @@ export default function EntryViewPage() {
         .from("mood_entries")
         .select("*")
         .eq("date", date)
-        .order("id", { ascending: false }) // ⬅️ NEW: most recent entry
+        .order("id", { ascending: false })
         .limit(1)
         .maybeSingle();
 
@@ -64,6 +74,22 @@ export default function EntryViewPage() {
 
     fetchEntry();
   }, [date]);
+
+  const handleSave = async () => {
+    const { error } = await supabase
+      .from("mood_entries")
+      .update({ journal_text: editedText })
+      .eq("id", entry.id);
+
+    if (error) {
+      console.error("Update failed:", error);
+      Alert.alert("Failed to save changes.");
+    } else {
+      setEntry({ ...entry, journal_text: editedText });
+      setIsEditing(false);
+      Alert.alert("Entry saved!");
+    }
+  };
 
   if (entry === undefined) {
     return (
@@ -123,20 +149,68 @@ export default function EntryViewPage() {
 
         {/* Journal box */}
         <View className="bg-gray-100 rounded-2xl p-6 -mt-5 mb-8">
-          <Text className="text-xl font-nunito text-gray-800 leading-relaxed">
-            {entry.journal_text}
-          </Text>
+          {isEditing ? (
+            <TextInput
+              multiline
+              value={editedText}
+              onChangeText={setEditedText}
+              className="text-xl font-nunito text-gray-800 leading-relaxed min-h-[180px] max-h-[300px] text-top"
+            />
+          ) : (
+            <Text className="text-xl font-nunito text-gray-800 leading-relaxed">
+              {entry.journal_text}
+            </Text>
+          )}
         </View>
 
-        {/* Done button */}
-        <Pressable
-          onPress={() => router.back()}
-          className="bg-cutie-pink py-4 rounded-full items-center shadow"
-        >
-          <Text className="text-white font-semibold text-xl font-nunito-bold">
-            Done
-          </Text>
-        </Pressable>
+        <View className="space-y-4 gap-y-8">
+          {!isEditing && (
+            <>
+              <Pressable
+                onPress={() => {
+                  setEditedText(entry.journal_text);
+                  setIsEditing(true);
+                }}
+                className="bg-cutie-green py-4 rounded-full items-center shadow"
+              >
+                <Text className="text-white font-semibold text-xl font-nunito-bold">
+                  Edit Entry
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => router.back()}
+                className="bg-cutie-pink py-4 rounded-full items-center shadow"
+              >
+                <Text className="text-white font-semibold text-xl font-nunito-bold">
+                  Done
+                </Text>
+              </Pressable>
+            </>
+          )}
+
+          {isEditing && (
+            <>
+              <Pressable
+                onPress={handleSave}
+                className="bg-cutie-green py-4 rounded-full items-center shadow"
+              >
+                <Text className="text-white font-semibold text-xl font-nunito-bold">
+                  Save Changes
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => setIsEditing(false)}
+                className="bg-cutie-pink py-4 rounded-full items-center shadow"
+              >
+                <Text className="text-white font-semibold text-xl font-nunito-bold">
+                  Cancel
+                </Text>
+              </Pressable>
+            </>
+          )}
+        </View>
       </ScrollView>
     </LinearGradient>
   );
