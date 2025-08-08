@@ -99,6 +99,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 - Add user authentication
 - Add image property to journal entry
+- Add feature of chatbot reaching out after three bad days in a row
 
 ---
 
