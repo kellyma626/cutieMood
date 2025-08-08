@@ -195,6 +195,58 @@ export default function EntryViewPage() {
     }
   };
 
+  // ---- Delete: split into a helper + wrapper so we can reuse with/without confirm
+  const doDelete = async () => {
+    if (!entry) return;
+
+    const { error } = await supabase
+      .from("mood_entries")
+      .delete()
+      .eq("id", entry.id);
+
+    if (error) {
+      console.error("Delete failed:", error);
+      Alert.alert("Failed to delete entry.");
+      return;
+    }
+
+    setEntries((prev) => {
+      if (!prev) return prev;
+      const next = prev.filter((e) => e.id !== entry.id);
+
+      const newIndex = Math.max(
+        0,
+        Math.min(currentIndexRef.current, next.length - 1),
+      );
+      setCurrentIndex(newIndex);
+
+      if (next.length === 0) {
+        router.back();
+      }
+      return next;
+    });
+
+    setIsEditing(false);
+    setFullEditorOpen(false);
+    Alert.alert("Entry deleted.");
+  };
+
+  const handleDelete = (skipConfirm = false) => {
+    if (skipConfirm) {
+      doDelete();
+      return;
+    }
+    Alert.alert(
+      "Delete this entry?",
+      "This can’t be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: doDelete },
+      ],
+      { cancelable: true },
+    );
+  };
+
   // ---- Viewability (typed + stable) ----
   const viewabilityConfigRef = useRef<ViewabilityConfig>({
     itemVisiblePercentThreshold: 60,
@@ -412,15 +464,34 @@ export default function EntryViewPage() {
                     </>
                   ) : (
                     <>
+                      {/* Save (tap) / Delete (long-press) */}
                       <Pressable
                         disabled={!isCurrent}
                         onPress={handleSave}
+                        onLongPress={() => {
+                          Alert.alert(
+                            "Hold detected",
+                            "Delete this entry? This can’t be undone.",
+                            [
+                              { text: "Cancel", style: "cancel" },
+                              {
+                                text: "Delete",
+                                style: "destructive",
+                                onPress: () => handleDelete(true),
+                              },
+                            ],
+                          );
+                        }}
+                        delayLongPress={600}
                         className={`bg-cutie-green py-4 rounded-full items-center shadow ${
                           isCurrent ? "" : "opacity-40"
                         }`}
                       >
                         <Text className="text-white font-nunito-bold text-xl">
                           Save Changes
+                        </Text>
+                        <Text className="text-white/80 font-nunito text-sm mt-1">
+                          Long-press to delete
                         </Text>
                       </Pressable>
 
