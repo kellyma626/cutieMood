@@ -3,38 +3,28 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { router } from "expo-router";
 
-type MoodType = "pink" | "orange" | "green" | "blue" | "purple";
-
-type MarkedDatesType = {
-  [date: string]: { mood: MoodType };
-};
-
 const legend = [
-  { label: "super awesome", color: "bg-cutie-pink", value: "pink" },
-  { label: "pretty good", color: "bg-cutie-orange", value: "orange" },
-  { label: "okay", color: "bg-cutie-green", value: "green" },
-  { label: "pretty bad", color: "bg-cutie-blue", value: "blue" },
-  { label: "really terrible", color: "bg-cutie-purple", value: "purple" },
+  { label: "super awesome", color: "bg-cutie-pink" },
+  { label: "pretty good", color: "bg-cutie-orange" },
+  { label: "okay", color: "bg-cutie-green" },
+  { label: "pretty bad", color: "bg-cutie-blue" },
+  { label: "really terrible", color: "bg-cutie-purple" },
 ];
 
-const markedDates: MarkedDatesType = {
-  "2025-11-01": { mood: "orange" },
-  "2025-11-02": { mood: "pink" },
-  "2025-11-03": { mood: "green" },
-  "2025-11-04": { mood: "blue" },
-  "2025-11-05": { mood: "orange" },
-  "2025-11-06": { mood: "pink" },
-  "2025-11-07": { mood: "pink" },
-  "2025-11-08": { mood: "pink" },
-  "2025-11-09": { mood: "orange" },
-  "2025-11-10": { mood: "pink" },
-  "2025-11-11": { mood: "blue" },
-  "2025-11-12": { mood: "blue" },
-  "2025-11-13": { mood: "orange" },
-  "2025-11-14": { mood: "pink" },
-  "2025-11-15": { mood: "green" },
-  "2025-11-16": { mood: "blue" },
-  "2025-11-17": { mood: "purple" },
+const moodToColor: Record<string, string> = {
+  "super awesome": "bg-cutie-pink",
+  "pretty good": "bg-cutie-orange",
+  okay: "bg-cutie-green",
+  "pretty bad": "bg-cutie-blue",
+  "really terrible": "bg-cutie-purple",
+};
+
+const markedDates: Record<string, string> = {
+  "2025-08-09": "super awesome",
+  "2025-08-07": "pretty good",
+  "2025-08-06": "okay",
+  "2025-08-08": "really terrible",
+  "2025-08-05": "pretty good",
 };
 
 export default function Index() {
@@ -49,39 +39,42 @@ export default function Index() {
     <View className="flex-1 items-center bg-white h-full w-full">
       <View className="w-[90%] rounded-2xl overflow-hidden bg-white shadow-xl">
         <Calendar
-          current={"2025-11-01"}
+          current={new Date().toISOString().split("T")[0]}
           markingType={"custom"}
           dayComponent={({ date, state }) => {
-            const dateString = date?.dateString;
-            if (!dateString) return null;
             const day = date?.day ?? "";
+            const dateString = date?.dateString;
             const isDisabled = state === "disabled";
-            const moodData = markedDates[dateString || ""];
-            const moodColor = moodData?.mood;
 
-            const baseCircle =
-              "h-10 w-10 rounded-full justify-center items-center";
-            const defaultCircle = "bg-gray-200";
-            const selectedCircle = moodColor
-              ? `bg-cutie-${moodColor}`
-              : defaultCircle;
+            // Get mood and mood color
+            const mood = markedDates[dateString ?? ""];
+            const moodBg = mood ? moodToColor[mood] : "bg-gray-200";
 
             const textColor = isDisabled
               ? "text-gray-400"
-              : moodColor
+              : mood
                 ? "text-white"
                 : "text-gray-800";
+
+            const baseCircle =
+              "h-10 w-10 rounded-full justify-center items-center";
 
             return (
               <TouchableOpacity
                 disabled={isDisabled}
-                onPress={() => onDayPress(dateString)}
+                onPress={() => {
+                  if (dateString) onDayPress(dateString);
+                }}
               >
-              <View
-                className={`${baseCircle} ${selectedCircle} ${isDisabled ? "opacity-30" : ""}`}
-              >
-                <Text className={`font-nunito-medium ${textColor}`}>{day}</Text>
-              </View>
+                <View
+                  className={`${baseCircle} ${moodBg} ${
+                    isDisabled ? "opacity-30" : ""
+                  }`}
+                >
+                  <Text className={`font-nunito-medium ${textColor}`}>
+                    {day}
+                  </Text>
+                </View>
               </TouchableOpacity>
             );
           }}

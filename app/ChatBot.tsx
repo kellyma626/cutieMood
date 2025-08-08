@@ -39,7 +39,7 @@ export default function ChatBot() {
           body: JSON.stringify({
             contents: [{ parts: [{ text: userMessage }] }],
           }),
-        }
+        },
       );
 
       const data = await response.json();
