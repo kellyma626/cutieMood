@@ -23,7 +23,7 @@ cutieMood is a cheerful mobile app designed to help users check in with their fe
 
 ## 🧡 Demo Video
 
-🛠️🍊 TODO: add demo video
+https://github.com/user-attachments/assets/ea1e66c5-7f2a-424f-a147-f01b9c3f8686
 
 ---
 
