@@ -65,7 +65,7 @@ export default function Index() {
 
           // Any bad entry marks the whole day bad
           const badByDay = new Map<string, boolean>(
-            dates.map((d) => [d, false])
+            dates.map((d) => [d, false]),
           );
           for (const row of data ?? []) {
             if (BAD_MOODS.includes(row.mood as MoodType)) {
@@ -89,9 +89,8 @@ export default function Index() {
       return () => {
         cancelled = true;
       };
-    }, [])
+    }, []),
   );
-  
 
   return (
     <LinearGradient
