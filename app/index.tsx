@@ -33,7 +33,7 @@ export default function Index() {
       const checkThreeDayStreak = async () => {
         try {
           // Toggle to true while testing to show the modal every time
-          const FORCE_TEST = __DEV__ && true;
+          const FORCE_TEST = __DEV__ && false;
 
           // Local midnight for today
           const d0 = new Date();
@@ -62,7 +62,7 @@ export default function Index() {
 
           // Any bad entry marks the day as bad
           const badByDay = new Map<string, boolean>(
-            dates.map((d) => [d, false])
+            dates.map((d) => [d, false]),
           );
           for (const row of data ?? []) {
             const mood = row.mood as MoodType | undefined;
@@ -89,7 +89,7 @@ export default function Index() {
       return () => {
         cancelled = true;
       };
-    }, [])
+    }, []),
   );
 
   return (
