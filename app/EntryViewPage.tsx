@@ -399,7 +399,7 @@ export default function EntryViewPage() {
                   disabled={!isCurrent || !isEditing}
                   onPress={() => {
                     // ⚙️ Keep existing temp selection if present, else seed with saved mood
-                    setTempMood((tempMood ?? (entry?.mood as MoodType)) ?? null);
+                    setTempMood(tempMood ?? (entry?.mood as MoodType) ?? null);
                     setMoodPickerOpen(true);
                   }}
                   className="relative mb-12 mt-14"
