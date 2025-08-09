@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { View, Image, Text, Modal, Pressable } from "react-native";
 import Calendar from "@/app/Calendar";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/lib/supabase.js";
 
@@ -32,10 +32,10 @@ export default function Index() {
 
       const checkThreeDayStreak = async () => {
         try {
-          // set true while testing to bypass the "once per day" gate
-          const FORCE_TEST = false;
+          // Toggle to true while testing to show the modal every time
+          const FORCE_TEST = __DEV__ && true;
 
-          // Local midnight for today (no UTC string parsing)
+          // Local midnight for today
           const d0 = new Date();
           d0.setHours(0, 0, 0, 0);
           const d1 = new Date(d0);
@@ -44,36 +44,35 @@ export default function Index() {
           d2.setDate(d0.getDate() - 2);
 
           const dates = [ymd(d2), ymd(d1), ymd(d0)];
-          // console.log("3-day streak check:", dates);
 
-          // Don’t nag more than once per calendar day (unless FORCE_TEST)
+          // Only once per calendar day (unless FORCE_TEST)
           if (!FORCE_TEST) {
             const lastShown = await AsyncStorage.getItem(MODAL_SHOWN_KEY);
             if (lastShown === dates[2]) return;
           }
 
-          // Query exactly the three dates to dodge timezone/range issues
-          const { data, error } = await supabase
+          // Query exactly those three dates
+          const { data } = await supabase
             .from("mood_entries")
             .select("date,mood")
-            .in("date", dates);
+            .in("date", dates)
+            .throwOnError();
 
-          if (error) {
-            console.error("Streak check failed:", error);
-            return;
-          }
+          if (cancelled) return;
 
-          // Any bad entry marks the whole day bad
+          // Any bad entry marks the day as bad
           const badByDay = new Map<string, boolean>(
-            dates.map((d) => [d, false]),
+            dates.map((d) => [d, false])
           );
           for (const row of data ?? []) {
-            if (BAD_MOODS.includes(row.mood as MoodType)) {
-              badByDay.set(row.date, true);
+            const mood = row.mood as MoodType | undefined;
+            if (mood && BAD_MOODS.includes(mood)) {
+              badByDay.set(row.date as string, true);
             }
           }
 
-          const threeBad = dates.every((d) => badByDay.get(d));
+          const threeBad = dates.every((d) => badByDay.get(d) === true);
+
           if (!cancelled && threeBad) {
             setSupportOpen(true);
             if (!FORCE_TEST) {
@@ -81,7 +80,8 @@ export default function Index() {
             }
           }
         } catch (e) {
-          console.error("Streak check exception:", e);
+          const err = e instanceof Error ? e : new Error(String(e));
+          console.error("Streak check exception:", err.message, err.stack);
         }
       };
 
@@ -89,7 +89,7 @@ export default function Index() {
       return () => {
         cancelled = true;
       };
-    }, []),
+    }, [])
   );
 
   return (
@@ -140,22 +140,33 @@ export default function Index() {
               </Text>
             </View>
 
-            <Pressable
-              onPress={() => setSupportOpen(false)}
-              className="bg-cutie-green py-3 rounded-2xl items-center mb-2"
-            >
-              <Text className="text-white font-nunito-bold">I’m okay</Text>
-            </Pressable>
+            {/* Primary: talk to the chatbot */}
             <Pressable
               onPress={() => {
                 setSupportOpen(false);
-                // If you have a resources screen, navigate there:
-                // router.push("/resources");
+                router.push("/ChatBot");
               }}
-              className="bg-gray-200 py-3 rounded-2xl items-center"
+              className="bg-cutie-pink py-3 rounded-2xl items-center mb-2"
+              accessibilityRole="button"
+              accessibilityLabel="Chat with Tangie about what's going on"
             >
-              <Text className="font-nunito-bold text-gray-700">
-                See resources
+              <Text className="text-white font-nunito-bold">
+                Chat with Tangie
+              </Text>
+              <Text className="text-white/80 font-nunito text-xs mt-0.5">
+                I’ll listen and help you work through it
+              </Text>
+            </Pressable>
+
+            {/* Secondary: dismiss */}
+            <Pressable
+              onPress={() => setSupportOpen(false)}
+              className="bg-cutie-green py-3 rounded-2xl items-center"
+              accessibilityRole="button"
+              accessibilityLabel="I'm okay for now"
+            >
+              <Text className="font-nunito-bold text-white">
+                I’m okay for now
               </Text>
             </Pressable>
           </View>
