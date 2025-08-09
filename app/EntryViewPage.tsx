@@ -20,8 +20,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { supabase } from "@/lib/supabase.js";
-// near the top of the file, after constants
-const JOURNAL_MAX_HEIGHT = 280; // tweak to taste
+
+const JOURNAL_MAX_HEIGHT = 280;
 
 // Mood image mapping
 const moodToImage: Record<string, any> = {
@@ -82,6 +82,7 @@ export default function EntryViewPage() {
 
   // Mood picker modal
   const [moodPickerOpen, setMoodPickerOpen] = useState(false);
+  const [tempMood, setTempMood] = useState<MoodType | null>(null);
 
   // Full-screen text editor
   const [fullEditorOpen, setFullEditorOpen] = useState(false);
@@ -102,6 +103,7 @@ export default function EntryViewPage() {
   // Close mood picker if we leave edit mode
   useEffect(() => {
     if (!isEditing && moodPickerOpen) setMoodPickerOpen(false);
+    if (!isEditing) setTempMood(null);
   }, [isEditing, moodPickerOpen]);
 
   // Also close full-screen editor if we leave edit mode
@@ -109,13 +111,18 @@ export default function EntryViewPage() {
     if (!isEditing && fullEditorOpen) setFullEditorOpen(false);
   }, [isEditing, fullEditorOpen]);
 
+  // Reset any pending mood when switching cards
+  useEffect(() => {
+    setTempMood(null);
+  }, [currentIndex]);
+
   // Swipe-down close for history sheet
   const panHistory = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, g) => {
         const dy = Math.abs(g.dy);
         const dx = Math.abs(g.dx);
-        return dy > 8 && dy > dx; // mostly vertical
+        return dy > 8 && dy > dx;
       },
       onPanResponderRelease: (_, g) => {
         if (g.dy > 80 || g.vy > 0.8) setHistoryOpen(false);
@@ -135,7 +142,7 @@ export default function EntryViewPage() {
         .from("mood_entries")
         .select("*")
         .eq("date", date)
-        .order("id", { ascending: false }); // newest first
+        .order("id", { ascending: false });
 
       if (error) {
         console.error("Fetch error:", error);
@@ -151,54 +158,53 @@ export default function EntryViewPage() {
 
   const handleSave = async () => {
     if (!entry) return;
+
+    const updates: Record<string, any> = {};
+    const nextText = editedText ?? "";
+    if ((entry.journal_text ?? "") !== nextText) {
+      updates.journal_text = nextText;
+    }
+
+    const nextMood = (tempMood ?? entry.mood) as MoodType;
+    if (nextMood && nextMood !== entry.mood) {
+      updates.mood = nextMood;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      setIsEditing(false);
+      setFullEditorOpen(false);
+      setMoodPickerOpen(false);
+      setTempMood(null);
+      Alert.alert("No changes to save.");
+      return;
+    }
+
     const { error } = await supabase
       .from("mood_entries")
-      .update({ journal_text: editedText })
+      .update(updates)
       .eq("id", entry.id);
 
     if (error) {
       console.error("Update failed:", error);
       Alert.alert("Failed to save changes.");
-    } else {
-      setEntries((prev) => {
-        if (!prev) return prev;
-        const copy = [...prev];
-        copy[currentIndex] = {
-          ...copy[currentIndex],
-          journal_text: editedText,
-        };
-        return copy;
-      });
-      setIsEditing(false);
-      Alert.alert("Entry saved!");
+      return;
     }
+
+    setEntries((prev) => {
+      if (!prev) return prev;
+      const copy = [...prev];
+      copy[currentIndex] = { ...copy[currentIndex], ...updates };
+      return copy;
+    });
+
+    setIsEditing(false);
+    setFullEditorOpen(false);
+    setMoodPickerOpen(false);
+    setTempMood(null);
+    Alert.alert("Entry saved!");
   };
 
-  const handleUpdateMood = async (newMood: MoodType) => {
-    if (!entry) return;
-    const { error } = await supabase
-      .from("mood_entries")
-      .update({ mood: newMood })
-      .eq("id", entry.id);
-
-    if (error) {
-      console.error("Mood update failed:", error);
-      Alert.alert("Failed to update mood.");
-    } else {
-      setEntries((prev) => {
-        if (!prev) return prev;
-        const copy = [...prev];
-        copy[currentIndex] = {
-          ...copy[currentIndex],
-          mood: newMood,
-        };
-        return copy;
-      });
-      setMoodPickerOpen(false);
-    }
-  };
-
-  // ---- Delete: split into a helper + wrapper so we can reuse with/without confirm
+  // ---- Delete (unchanged)
   const doDelete = async () => {
     if (!entry) return;
 
@@ -250,7 +256,7 @@ export default function EntryViewPage() {
     );
   };
 
-  // ---- Viewability (typed + stable) ----
+  // ---- Viewability (unchanged)
   const viewabilityConfigRef = useRef<ViewabilityConfig>({
     itemVisiblePercentThreshold: 60,
   });
@@ -265,7 +271,6 @@ export default function EntryViewPage() {
     },
   ).current;
 
-  // Fallback: also update at momentum end
   const onMomentumEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (!pageWidth) return;
     const x = e.nativeEvent.contentOffset.x;
@@ -276,7 +281,6 @@ export default function EntryViewPage() {
     }
   };
 
-  // Set page width from layout
   const onLayout = (e: LayoutChangeEvent) => {
     setPageWidth(e.nativeEvent.layout.width);
   };
@@ -367,19 +371,25 @@ export default function EntryViewPage() {
               : undefined
           }
           renderItem={({ item }) => {
-            const moodColor =
-              moodToColor[item.mood as keyof typeof moodToColor] ||
-              "bg-gray-200";
             const isCurrent = item.id === entries[currentIndex].id;
+
+            // ⚙️ Use pending mood while editing the current card
+            const displayMood = (
+              isCurrent && isEditing ? (tempMood ?? item.mood) : item.mood
+            ) as MoodType;
+
+            const moodColor =
+              moodToColor[displayMood as keyof typeof moodToColor] ||
+              "bg-gray-200";
 
             return (
               <View
                 style={{ width: pageWidth ?? "100%" }}
                 className="px-6 pb-10 relative"
               >
-                {/* Tangerine image pinned to the very top-right of the card */}
+                {/* Tangerine image uses displayMood */}
                 <Image
-                  source={moodToImage[item.mood]}
+                  source={moodToImage[displayMood as keyof typeof moodToImage]}
                   className="w-28 h-28 absolute right-4 top-16 z-20"
                   resizeMode="contain"
                 />
@@ -387,14 +397,18 @@ export default function EntryViewPage() {
                 {/* Mood block (tap only in edit mode) */}
                 <Pressable
                   disabled={!isCurrent || !isEditing}
-                  onPress={() => setMoodPickerOpen(true)}
+                  onPress={() => {
+                    // ⚙️ Keep existing temp selection if present, else seed with saved mood
+                    setTempMood((tempMood ?? (entry?.mood as MoodType)) ?? null);
+                    setMoodPickerOpen(true);
+                  }}
                   className="relative mb-12 mt-14"
                 >
                   <View
                     className={`w-full rounded-2xl py-6 px-6 pr-36 ${moodColor}`}
                   >
                     <Text className="text-3xl font-nunito-bold text-white">
-                      {item.mood}
+                      {displayMood}
                     </Text>
                     {isCurrent && isEditing && (
                       <Text className="text-white/90 font-nunito mt-1">
@@ -403,7 +417,6 @@ export default function EntryViewPage() {
                     )}
                   </View>
 
-                  {/* Subtle overlay when not current */}
                   {!isCurrent && (
                     <View className="absolute inset-0 rounded-2xl bg-black/5" />
                   )}
@@ -452,7 +465,7 @@ export default function EntryViewPage() {
                         disabled={!isCurrent}
                         onPress={() => {
                           setEditedText(item.journal_text ?? "");
-                          setIsEditing(true); // DO NOT open full-screen here
+                          setIsEditing(true);
                         }}
                         className={`bg-cutie-green py-4 rounded-full items-center shadow ${
                           isCurrent ? "" : "opacity-40"
@@ -477,7 +490,6 @@ export default function EntryViewPage() {
                     </>
                   ) : (
                     <>
-                      {/* Save (tap) / Delete (long-press) */}
                       <Pressable
                         disabled={!isCurrent}
                         onPress={handleSave}
@@ -512,7 +524,8 @@ export default function EntryViewPage() {
                         disabled={!isCurrent}
                         onPress={() => {
                           setIsEditing(false);
-                          setFullEditorOpen(false); // safety close
+                          setFullEditorOpen(false);
+                          setTempMood(null); // Cancel reverts pending mood
                         }}
                         className={`bg-cutie-pink py-4 rounded-full items-center shadow ${
                           isCurrent ? "" : "opacity-40"
@@ -536,12 +549,18 @@ export default function EntryViewPage() {
         visible={moodPickerOpen}
         transparent
         animationType="fade"
-        onRequestClose={() => setMoodPickerOpen(false)}
+        onRequestClose={() => {
+          // ⚙️ Do NOT clear tempMood here; just close the modal
+          setMoodPickerOpen(false);
+        }}
       >
         <View className="flex-1 items-center justify-center">
           {/* Backdrop */}
           <Pressable
-            onPress={() => setMoodPickerOpen(false)}
+            onPress={() => {
+              // ⚙️ Just close; keep tempMood so preview stays
+              setMoodPickerOpen(false);
+            }}
             className="absolute inset-0 bg-black/40"
           />
 
@@ -555,7 +574,11 @@ export default function EntryViewPage() {
               {ALL_MOODS.map((m) => (
                 <Pressable
                   key={m}
-                  onPress={() => handleUpdateMood(m)}
+                  onPress={() => {
+                    // ⚙️ Selecting a mood auto-closes and keeps tempMood (preview)
+                    setTempMood(m);
+                    setMoodPickerOpen(false);
+                  }}
                   className="flex-row items-center justify-between px-4 py-3 rounded-2xl bg-gray-50"
                 >
                   <View className="flex-row items-center gap-x-3">
@@ -569,8 +592,7 @@ export default function EntryViewPage() {
                     </Text>
                   </View>
 
-                  {/* Selected check */}
-                  {entry?.mood === m ? (
+                  {(tempMood ?? entry?.mood) === m ? (
                     <View className="w-6 h-6 rounded-full bg-cutie-green" />
                   ) : (
                     <View className="w-6 h-6 rounded-full border border-gray-300" />
@@ -580,7 +602,10 @@ export default function EntryViewPage() {
             </View>
 
             <Pressable
-              onPress={() => setMoodPickerOpen(false)}
+              onPress={() => {
+                // ⚙️ Close without clearing tempMood (keeps preview)
+                setMoodPickerOpen(false);
+              }}
               className="mt-5 bg-gray-200 py-3 rounded-2xl items-center"
             >
               <Text className="font-nunito-bold text-gray-700 text-lg">
@@ -604,7 +629,6 @@ export default function EntryViewPage() {
             <Pressable
               onPress={() => {
                 setFullEditorOpen(false);
-                // Keep isEditing true; user can still save/cancel via main buttons.
               }}
               className="px-3 py-2"
             >
@@ -630,7 +654,6 @@ export default function EntryViewPage() {
             </Pressable>
           </View>
 
-          {/* Editor body */}
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : undefined}
             className="flex-1"
@@ -651,7 +674,7 @@ export default function EntryViewPage() {
         </View>
       </Modal>
 
-      {/* History picker modal */}
+      {/* History picker modal (unchanged) */}
       <Modal
         visible={historyOpen}
         transparent
@@ -659,18 +682,14 @@ export default function EntryViewPage() {
         onRequestClose={() => setHistoryOpen(false)}
       >
         <View className="flex-1 justify-end">
-          {/* Backdrop: tap outside to close */}
           <Pressable
             onPress={() => setHistoryOpen(false)}
             className="absolute inset-0 bg-black/40"
           />
-
-          {/* Bottom sheet */}
           <View
             {...panHistory.panHandlers}
             className="bg-white rounded-t-3xl p-6 max-h-[70%]"
           >
-            {/* Grab handle */}
             <View className="items-center mb-3">
               <View className="w-12 h-1.5 bg-gray-300 rounded-full" />
             </View>
