@@ -1,0 +1,212 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage{fontawesome5}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+% \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+%   \textbf{\href{http://sourabhbajaj.com/}{\Large Sourabh Bajaj}} & Email : \href{mailto:sourabh@sourabhbajaj.com}{sourabh@sourabhbajaj.com}\\
+%   \href{http://sourabhbajaj.com/}{http://www.sourabhbajaj.com} & Mobile : +1-123-456-7890 \\
+% \end{tabular*}
+
+\begin{center}
+    \textbf{\Huge \scshape Simon Cun} \\ \vspace{1pt}
+    \small 909-288-9846 $|$ 
+    \href{mailto:simoncun2586@gmail.com}{\underline{simoncun2586@gmail.com}} $|$ 
+    \href{https://linkedin.com/in/simon-cun}{\underline{linkedin.com/in/simon-cun}} $|$ 
+    \href{https://github.com/Simon-Cun}{\underline{github.com/Simon-Cun}} $|$ 
+    \href{https://simoncun.vercel.app}{\underline{simoncun.vercel.app}}
+\end{center}
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of California Riverside}{Riverside, CA}
+      {Bachelor of Science in Computer Science}{Sep. 2024 -- June 2027}
+      \vspace{-1.5mm}
+      \item \textnormal{Relevant Coursework:} Data Structures \& Algorithms, Software Construction \hfill \textnormal{GPA:} 3.90/4.00
+  \resumeSubHeadingListEnd
+%
+
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+    {ACM Forge - Skyflow Software Engineer / Mechanical Engineer}{February 2025 -- Present}
+    {University of California, Riverside}{Riverside, CA}
+  \resumeItemListStart
+    \resumeItem{Designed and 3D printed a functional drone chassis using SolidWorks, enabling stable hardware integration.}
+    \resumeItem{Boosted drone stability by calibrating IMU sensor data and resolving flight control bugs in Python, enhancing autonomous navigation.}
+    \resumeItem{Led integration of camera module, motor system, and embedded software to support autonomous flight capability.}
+  \resumeItemListEnd
+
+
+     \resumeSubheading
+  {ACM Spark - Web Developer / Designer}{December 2024 -- Present}
+  {University of California, Riverside}{Riverside, CA}
+  \resumeItemListStart
+    \resumeItem{Transformed Figma wireframes into a fully functional and responsive website, implementing all UI components to match original designs.}
+    \resumeItem{Collaborated in weekly team meetings to align design goals, share progress, and resolve frontend development challenges.}
+  \resumeItemListEnd
+
+      
+% -----------Multiple Positions Heading-----------
+%    \resumeSubSubheading
+%     {Software Engineer I}{Oct 2014 - Sep 2016}
+%     \resumeItemListStart
+%        \resumeItem{Apache Beam}
+%          {Apache Beam is a unified model for defining both batch and streaming data-parallel processing pipelines}
+%     \resumeItemListEnd
+%    \resumeSubHeadingListEnd
+%-------------------------------------------
+
+  \resumeSubHeadingListEnd
+
+%-------------------------------------------
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+    \resumeProjectHeading
+          {\textbf{Cutie Mood} $|$ \emph{React Native, Expo, Supabase, Gemini API, TypeScript, Next.js}}{September 2025 -- August 2025}
+        \resumeItemListStart
+          \resumeItem{Co-developed a cross-platform mobile app for mood tracking, journaling, and chatbot-based mental health support; logged \textbf{120+} mood entries during testing.}
+          \resumeItem{Integrated \textbf{Supabase} for secure data storage, retrieval, and cross-device sync with resilient error handling and offline-first behavior.}
+          \resumeItem{Designed a \textbf{calendar-based} mood tracking UI to \textbf{view, edit, and delete} entries by date, improving access to personal mood history.}
+          \resumeItem{Built the chatbot interface and connected it to the \textbf{Gemini API}, adding graceful fallbacks to keep the experience uninterrupted during API errors.}
+        \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Autonomous Drone} $|$ \emph{Python, SolidWorks, Git}}{February 2025 -- Present}
+          \resumeItemListStart
+            \resumeItem{Designed and programmed a fully autonomous drone using Python and SolidWorks, achieving stable object detection in real-time tests.}
+            \resumeItem{Engineered drone parts and precision testing jigs in SolidWorks to support flight accuracy.}
+            \resumeItem{Led debugging and enhancement of Python-based flight control algorithms to improve stability and autonomy.}
+          \resumeItemListEnd
+      
+          \resumeProjectHeading
+          {\textbf{WUSHU Website} $|$ \emph{React, Next.js, Typescript, Tailwind, Motion, Node.js}}{January 2025 -- June 2025}
+          \resumeItemListStart
+            \resumeItem{Worked in a team using React, Tailwind CSS, and TypeScript for UCR Wushu Club’s official site.}
+            \resumeItem{Integrated animations and interactive features to showcase team members and event highlights.}
+          \resumeItemListEnd
+          \resumeProjectHeading
+          {\textbf{Upcycle To Overcome} $|$ \emph{HTML, CSS, JavaScript}}{January 2025 -- January 2025}
+          \resumeItemListStart
+            \resumeItem{Competed in RoseHack with a theme around sustainability. Collaborated in a group of 4 winning the beginner track.}
+            \resumeItem{Built a sustainability-focused website in 24 hours at RoseHack, winning the beginner track and highlighting upcycling benefits with educational content and interactive design.}
+          \resumeItemListEnd
+          
+    \resumeSubHeadingListEnd
+
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Java, Python, C++, JavaScript, TypeScript, HTML/CSS} \\
+     \textbf{Frameworks}{: React, Node.js, Next.js, Tailwind CSS} \\
+     \textbf{Developer Tools}{: Git, GitHub, SolidWorks, Figma, OpenAI API} \\
+    }}
+ \end{itemize}
+
+\end{document}
